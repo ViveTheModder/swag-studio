@@ -148,7 +148,7 @@ public class MainApp
 			curr = gsc.readInt();
 			currID = getLittleEndianInt(curr);
 			if (currID>=10000 && currID<10030) //display scene ID as long as it's not a victory/loss sequence
-				System.out.println("[Scene " + (currID-10000) + "]");
+				System.out.println("\n[Scene " + (currID-10000) + "]");
 			if (curr == 0x01010900)
 			{
 				pos+=5; gsc.seek(pos);
@@ -164,7 +164,7 @@ public class MainApp
 				pos+=4; gsc.seek(pos);
 				gsacOffset = getLittleEndianShort(gsc.readShort());
 				int gsacID = getIntFromOffset(gsc,gsacOffset,gsdtStart);
-				System.out.println("Condition ID: " + getStringFromCondOrEventID(condTxt, condID) + "\n--> Scene ID: " + (gsacID-10000));
+				System.out.println("Condition: " + getStringFromCondOrEventID(condTxt, condID) + "\n> GSAC ID: " + (gsacID-10000));
 			}
 			if (curr == 0x01020800)
 			{
@@ -174,9 +174,9 @@ public class MainApp
 				pos+=4; gsc.seek(pos);
 				eventCharOffset = getLittleEndianShort(gsc.readShort());
 				int eventCharID = getIntFromOffset(gsc,eventCharOffset,gsdtStart);
-				System.out.println("Event ID: " + getStringFromCondOrEventID(eventTxt, eventID));
+				System.out.println("Event:     " + getStringFromCondOrEventID(eventTxt, eventID));
 				if (eventCharID != -1) //only print out char ID if the event actually uses it
-					System.out.println("--> Character: " + getStringFromAnyID(charTxt, eventCharID));
+					System.out.println("Character: " + getStringFromAnyID(charTxt, eventCharID));
 			}
 			pos++; gsc.seek(pos);
 		}
