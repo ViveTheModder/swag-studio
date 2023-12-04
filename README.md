@@ -2,6 +2,8 @@
 Swag Studio is a Budokai Tenkaichi 3 tool made for GSC files (Dragon History scenarios) to display basic information about them.
 Currently, it displays the following:
 * what conditions there are, and what scenes they lead to;
+* what Z-Items are equipped/removed during a specific scene;
+* what health or ki bonuses there may or may not be present;
 * what events occur, and what characters they use (if any).
 
 To ensure the program works, it comes with a vanilla copy of the Common Enemy GSC file (GSC-B-0.gsc).
