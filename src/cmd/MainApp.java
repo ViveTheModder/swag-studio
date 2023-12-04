@@ -121,24 +121,82 @@ public class MainApp
 		}
 		return getStringFromAnyID(txt, ID);
 	} 
-
+	public static String getTeamInfo(int[][] team, int charIndex, RandomAccessFile charTxt, RandomAccessFile itemsTxt) throws IOException
+	{
+		String output; boolean isDmg;
+		if (team[charIndex][2] == 0) isDmg = false; 
+		else isDmg = true;
+		output = "Character: " + getStringFromAnyID(charTxt, team[charIndex][0]) + "\n";
+		output = output + "Costume: " + (team[charIndex][1]+1) + "\n";
+		output = output + "Damaged: " + isDmg + "\n";
+		output = output + "COM Difficulty Level: " + team[charIndex][3] + "\n";
+		output = output + "Strategy Z-Item: " + getStringFromAnyID(itemsTxt, team[charIndex][4]) + "\n";
+		output = output + "Initial Health: " + team[charIndex][5] + "%\n";
+		
+		for (int i=6; i<=12; i++)
+			output = output + "Z-Item #" + (i-5) + ": " + getStringFromAnyID(itemsTxt, team[charIndex][i]) + "\n";
+		return output;
+	}
 	public static void main(String[] args) throws IOException 
 	{
 		RandomAccessFile gsc = new RandomAccessFile("GSC", "r");
-		RandomAccessFile charTxt = new RandomAccessFile("characters.txt","r");
-		RandomAccessFile condTxt = new RandomAccessFile("conditions.txt","r");
-		RandomAccessFile eventTxt = new RandomAccessFile("events.txt","r");
+		RandomAccessFile charTxt = new RandomAccessFile("txt/characters.txt","r");
+		RandomAccessFile condTxt = new RandomAccessFile("txt/conditions.txt","r");
+		RandomAccessFile eventTxt = new RandomAccessFile("txt/events.txt","r");
+		RandomAccessFile itemsTxt = new RandomAccessFile("txt/items.txt","r");
 
 		if (checkGSC(gsc) == true) System.exit(1);
 		short gsdtStart = getStartOfGSDT(gsc);
 		
-		int curr=0, currID=10000, pos=0, gsacType=0;
-		short condOffset, gsacOffset, gsacTypeOffset, eventOffset, eventCharOffset; 
-		byte offsetType; //currently unused (tool still has float support for those who wanna fork it)
-		
+		int curr=0, currID=10000, pos=0, gsacType=0, param;
+		short offset;
+		/* unused variables (for those interested)
+		RandomAccessFile bgmTxt = new RandomAccessFile("txt/bgm.txt","r");
+		RandomAccessFile mapTxt = new RandomAccessFile("txt/maps.txt","r");
+		int mapID, bgmID, charIndex=0;
+		int[][] team = new int[10][13]; //this might be split into 2 arrays representing each player's team
+		byte offsetType; */
+				
 		while (curr!=0x01000300) //traverse until start of scene 0 is reached
 		{
 			curr = gsc.readInt();
+			/* I commented all this out because it legit makes the rest of the program not work lmao (might get fixed someday)
+			if (curr == 0x01050A00)
+			{
+				pos+=5; gsc.seek(pos);
+				offset = getLittleEndianShort(gsc.readShort());
+				mapID = getIntFromOffset(gsc, offset, gsdtStart);
+				pos+=4; gsc.seek(pos);
+				offset = getLittleEndianShort(gsc.readShort());
+				bgmID = getIntFromOffset(gsc, offset, gsdtStart);
+				System.out.println("Map: " + getStringFromAnyID(mapTxt,mapID));
+				System.out.println("BGM: " + getStringFromAnyID(bgmTxt,bgmID));
+			}
+			if (curr == 0x01020B00)
+			{
+				pos+=5; gsc.seek(pos);
+				offset = getLittleEndianShort(gsc.readShort());
+				param = getIntFromOffset(gsc, offset, gsdtStart);
+				pos+=4; gsc.seek(pos);
+				offset = getLittleEndianShort(gsc.readShort());
+				param = getIntFromOffset(gsc, offset, gsdtStart);
+				System.out.println("Number of Teammates: " + param);		
+			}
+			if (curr == 0x010E0C00)
+			{
+				pos+=9; gsc.seek(pos);
+				offset = getLittleEndianShort(gsc.readShort());
+				team[charIndex][0] = getIntFromOffset(gsc, offset, gsdtStart);
+				for (int i=1; i<13; i++)
+				{
+					pos+=4; gsc.seek(pos);
+					offset = getLittleEndianShort(gsc.readShort());
+					team[charIndex][i] = getIntFromOffset(gsc, offset, gsdtStart);
+				}
+				System.out.println("\n" + getTeamInfo(team, charIndex, charTxt, itemsTxt));
+				charIndex++;
+			}
+			pos++; gsc.seek(pos); <-- this is the line of code that's likely causing it */
 			pos+=4; gsc.seek(pos);
 		}
 		
@@ -152,28 +210,78 @@ public class MainApp
 			if (curr == 0x01010900)
 			{
 				pos+=5; gsc.seek(pos);
-				gsacTypeOffset = getLittleEndianShort(gsc.readShort());
-				gsacType = getIntFromOffset(gsc,gsacTypeOffset,gsdtStart);
+				offset = getLittleEndianShort(gsc.readShort());
+				gsacType = getIntFromOffset(gsc,offset,gsdtStart);
 			}
 			if (gsacType!=-1) break; //-1 means the scene in question doesn't determine win or loss
 			if (curr == 0x08610200)
 			{
 				pos+=5; gsc.seek(pos);
-				condOffset = getLittleEndianShort(gsc.readShort());
-				int condID = getIntFromOffset(gsc,condOffset,gsdtStart);
+				offset = getLittleEndianShort(gsc.readShort());
+				int condID = getIntFromOffset(gsc,offset,gsdtStart);
 				pos+=4; gsc.seek(pos);
-				gsacOffset = getLittleEndianShort(gsc.readShort());
-				int gsacID = getIntFromOffset(gsc,gsacOffset,gsdtStart);
+				offset = getLittleEndianShort(gsc.readShort());
+				int gsacID = getIntFromOffset(gsc,offset,gsdtStart);
 				System.out.println("Condition: " + getStringFromCondOrEventID(condTxt, condID) + "\n> GSAC ID: " + (gsacID-10000));
+			}
+			if (curr == 0x01000D00)
+			{
+				gsc.seek(pos+4);
+				if (gsc.readInt() != 0x01000E00)
+					System.out.println("[Changes to Player 1 detected.]");
+			}
+			if (curr == 0x01000E00)
+			{
+				gsc.seek(pos+4);
+				if (gsc.readInt() != 0x01020800)
+					System.out.println("[Changes to Opponent detected.]");
+			}
+			if (curr == 0x08420100)
+			{
+				pos+=5; gsc.seek(pos);
+				offset = getLittleEndianShort(gsc.readShort());
+				param = getIntFromOffset(gsc,offset,gsdtStart); //this param is likely a boolean
+				if (param == 1) System.out.println("> Gain full Ki Bars");
+			}
+			if (curr == 0x08430100)
+			{
+				pos+=5; gsc.seek(pos);
+				offset = getLittleEndianShort(gsc.readShort());
+				param = getIntFromOffset(gsc,offset,gsdtStart); //this param is likely a multiple of 5000 or less
+				System.out.println("> Gain " + (param+1)*5000 + " HP (?)");
+			}
+			if (curr == 0x08460100)
+			{
+				pos+=5; gsc.seek(pos);
+				offset = getLittleEndianShort(gsc.readShort());
+				param = getIntFromOffset(gsc,offset,gsdtStart);
+				System.out.println("> Set current Ki Amount to " + param + "%");
+			}
+			//0x08480100 and 0x08680100 work the same, although: the latter accepts 0 as a value while the former doesn't
+			if (curr == 0x08480100 || curr == 0x08680100)
+			{
+				pos+=5; gsc.seek(pos);
+				offset = getLittleEndianShort(gsc.readShort());
+				param = getIntFromOffset(gsc,offset,gsdtStart);
+				System.out.println("> Set current Health to " + param + "%");
+			}
+			if (curr >= 0x08300100 && curr <= 0x08370100)
+			{
+				pos++; gsc.seek(pos);
+				int itemIndex = gsc.readByte()%48;
+				pos+=4; gsc.seek(pos);
+				offset = getLittleEndianShort(gsc.readShort());
+				int itemID = getIntFromOffset(gsc,offset,gsdtStart);
+				System.out.println("> Z-Item #" + (itemIndex+1) + ": " + getStringFromAnyID(itemsTxt,itemID));
 			}
 			if (curr == 0x01020800)
 			{
 				pos+=5; gsc.seek(pos);
-				eventOffset = getLittleEndianShort(gsc.readShort());
-				int eventID = getIntFromOffset(gsc,eventOffset,gsdtStart);
+				offset = getLittleEndianShort(gsc.readShort());
+				int eventID = getIntFromOffset(gsc,offset,gsdtStart);
 				pos+=4; gsc.seek(pos);
-				eventCharOffset = getLittleEndianShort(gsc.readShort());
-				int eventCharID = getIntFromOffset(gsc,eventCharOffset,gsdtStart);
+				offset = getLittleEndianShort(gsc.readShort());
+				int eventCharID = getIntFromOffset(gsc,offset,gsdtStart);
 				System.out.println("Event:     " + getStringFromCondOrEventID(eventTxt, eventID));
 				if (eventCharID != -1) //only print out char ID if the event actually uses it
 					System.out.println("Character: " + getStringFromAnyID(charTxt, eventCharID));
