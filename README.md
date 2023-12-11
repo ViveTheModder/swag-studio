@@ -16,6 +16,7 @@ To ensure the program works, it comes with a vanilla copy of the Common Enemy GS
 ![preview2](https://github.com/ViveTheModder/swag-studio/blob/main/img/prev-2.png)
 
 And just for fun, here is the output of the program if GSC-B-46.gsc (Galaxy Battle, the game's longest scenario) is given:
+```
 [Battle Settings]
 Map: Outer Space
 BGM: Hot Soul
@@ -365,7 +366,7 @@ Condition: Win Battle
 [Changes to Player 1 detected.]
 > Set current Health to 100%
 Event:     Nothing
-
+```
 ## Known Issues
 * As of now, this program is command-line only.
 * I cannot get a proper runnable JAR release of the program because of certain issues with Eclipse's export feature.
