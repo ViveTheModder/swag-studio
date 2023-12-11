@@ -121,20 +121,20 @@ public class MainApp
 		}
 		return getStringFromAnyID(txt, ID);
 	} 
-	public static String getTeamInfo(int[][] team, int charIndex, RandomAccessFile charTxt, RandomAccessFile itemsTxt) throws IOException
+	public static String getCharInfo(int[][] teams, int charIndex, RandomAccessFile charTxt, RandomAccessFile itemsTxt) throws IOException
 	{
 		String output; boolean isDmg;
-		if (team[charIndex][2] == 0) isDmg = false; 
+		if (teams[charIndex][2] == 0) isDmg = false; 
 		else isDmg = true;
-		output = "Character: " + getStringFromAnyID(charTxt, team[charIndex][0]) + "\n";
-		output = output + "Costume: " + (team[charIndex][1]+1) + "\n";
+		output = "Character: " + getStringFromAnyID(charTxt, teams[charIndex][0]) + "\n";
+		output = output + "Costume: " + (teams[charIndex][1]+1) + "\n";
 		output = output + "Damaged: " + isDmg + "\n";
-		output = output + "COM Difficulty Level: " + team[charIndex][3] + "\n";
-		output = output + "Strategy Z-Item: " + getStringFromAnyID(itemsTxt, team[charIndex][4]) + "\n";
-		output = output + "Initial Health: " + team[charIndex][5] + "%\n";
+		output = output + "COM Difficulty Level: " + teams[charIndex][3] + "\n";
+		output = output + "Strategy Z-Item: " + getStringFromAnyID(itemsTxt, teams[charIndex][4]) + "\n";
+		output = output + "Initial Health: " + teams[charIndex][5] + "%\n";
 		
 		for (int i=6; i<=12; i++)
-			output = output + "Z-Item #" + (i-5) + ": " + getStringFromAnyID(itemsTxt, team[charIndex][i]) + "\n";
+			output = output + "Z-Item #" + (i-5) + ": " + getStringFromAnyID(itemsTxt, teams[charIndex][i]) + "\n";
 		return output;
 	}
 	public static void main(String[] args) throws IOException 
@@ -150,19 +150,19 @@ public class MainApp
 		
 		int curr=0, currID=10000, pos=0, gsacType=0, param;
 		short offset;
-		/* unused variables (for those interested)
 		RandomAccessFile bgmTxt = new RandomAccessFile("txt/bgm.txt","r");
 		RandomAccessFile mapTxt = new RandomAccessFile("txt/maps.txt","r");
-		int mapID, bgmID, charIndex=0;
-		int[][] team = new int[10][13]; //this might be split into 2 arrays representing each player's team
-		byte offsetType; */
+		int mapID, bgmID, charIndex=0, teamIndex=1;
+		int[] teamCnt = new int[2];
+		int[][] teams = new int[10][13];
+		/* byte offsetType; unused for those who want the program to check for floats as well */
 				
 		while (curr!=0x01000300) //traverse until start of scene 0 is reached
 		{
 			curr = gsc.readInt();
-			/* I commented all this out because it legit makes the rest of the program not work lmao (might get fixed someday)
 			if (curr == 0x01050A00)
 			{
+				System.out.println("[Battle Settings]");
 				pos+=5; gsc.seek(pos);
 				offset = getLittleEndianShort(gsc.readShort());
 				mapID = getIntFromOffset(gsc, offset, gsdtStart);
@@ -179,25 +179,35 @@ public class MainApp
 				param = getIntFromOffset(gsc, offset, gsdtStart);
 				pos+=4; gsc.seek(pos);
 				offset = getLittleEndianShort(gsc.readShort());
-				param = getIntFromOffset(gsc, offset, gsdtStart);
-				System.out.println("Number of Teammates: " + param);		
+				teamCnt[teamIndex-1] = getIntFromOffset(gsc, offset, gsdtStart);
+				System.out.println("Player " + teamIndex + " Teammates: " + teamCnt[teamIndex-1]);
+				if (teamIndex==2) 
+				{
+					System.out.println(); teamIndex = 0;
+				}
+				teamIndex++;
 			}
 			if (curr == 0x010E0C00)
 			{
+				if (charIndex%teamCnt[teamIndex%2]==0) 
+				{
+					System.out.println("[Player " + teamIndex + "'s Team]");
+					teamIndex++;
+				}
 				pos+=9; gsc.seek(pos);
 				offset = getLittleEndianShort(gsc.readShort());
-				team[charIndex][0] = getIntFromOffset(gsc, offset, gsdtStart);
+				teams[charIndex][0] = getIntFromOffset(gsc, offset, gsdtStart);
 				for (int i=1; i<13; i++)
 				{
 					pos+=4; gsc.seek(pos);
 					offset = getLittleEndianShort(gsc.readShort());
-					team[charIndex][i] = getIntFromOffset(gsc, offset, gsdtStart);
+					teams[charIndex][i] = getIntFromOffset(gsc, offset, gsdtStart);
 				}
-				System.out.println("\n" + getTeamInfo(team, charIndex, charTxt, itemsTxt));
+				System.out.println("> Teammate " + ((charIndex%teamCnt[teamIndex%2])+1));
+				System.out.println(getCharInfo(teams, charIndex, charTxt, itemsTxt));
 				charIndex++;
 			}
-			pos++; gsc.seek(pos); <-- this is the line of code that's likely causing it */
-			pos+=4; gsc.seek(pos);
+			pos++; gsc.seek(pos);
 		}
 		
 		System.out.println("[Scene " + (currID-10000) + "]");
@@ -213,7 +223,6 @@ public class MainApp
 				offset = getLittleEndianShort(gsc.readShort());
 				gsacType = getIntFromOffset(gsc,offset,gsdtStart);
 			}
-			if (gsacType!=-1) break; //-1 means the scene in question doesn't determine win or loss
 			if (curr == 0x08610200)
 			{
 				pos+=5; gsc.seek(pos);
@@ -274,7 +283,7 @@ public class MainApp
 				int itemID = getIntFromOffset(gsc,offset,gsdtStart);
 				System.out.println("> Z-Item #" + (itemIndex+1) + ": " + getStringFromAnyID(itemsTxt,itemID));
 			}
-			if (curr == 0x01020800)
+			if (curr == 0x01020800 && gsacType == -1)
 			{
 				pos+=5; gsc.seek(pos);
 				offset = getLittleEndianShort(gsc.readShort());
