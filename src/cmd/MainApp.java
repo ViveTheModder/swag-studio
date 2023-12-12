@@ -1,5 +1,5 @@
 package cmd;
-
+//Swag Studio by ViveTheModder
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -11,6 +11,8 @@ import java.util.Scanner;
 public class MainApp 
 {
 	private static int sharedPos=0;
+	static final String GSC_PATH = "./gsc/";
+	static final String OUT_PATH = "./out/";
 	public static boolean checkGSC(RandomAccessFile gsc) throws IOException
 	{
 		boolean gscError = false;
@@ -155,10 +157,12 @@ public class MainApp
 		RandomAccessFile bgmTxt = new RandomAccessFile("txt/bgm.txt","r");
 		RandomAccessFile mapTxt = new RandomAccessFile("txt/maps.txt","r");
 		int bgmID, charIndex=0, curr=0, teamIndex=0, mapID;
-		short offset; String output="";
+		short offset;
+		String output="";
 		int[] teamCnt = new int[2];
 		int[][] teams = new int[10][13];
 		
+		sharedPos=0;
 		while (curr!=0x01000300) //traverse until start of scene 0 is reached
 		{
 			curr = gsc.readInt();
@@ -202,7 +206,6 @@ public class MainApp
 			}
 			sharedPos++; gsc.seek(sharedPos);
 		}
-		
 		output += "> Results\nTeammate Count (Player 1): " + teamCnt[0] + "\n";
 		output += "Teammate Count (Opponent): " + teamCnt[1] + "\n\n";
 		return output;
@@ -214,7 +217,7 @@ public class MainApp
 		int curr=0, currID=10000, gsacType=0, param;
 		short offset; String output="";
 		
-		gsc.seek(sharedPos); output += "[Scene " + (currID-10000) + "]\n";
+		gsc.seek(sharedPos-1); output += "[Scene " + (currID-10000) + "]\n";
 		while (curr!=0x47534454) //traverse until GSDT is reached
 		{
 			curr = gsc.readInt();
@@ -305,51 +308,53 @@ public class MainApp
 	}
 	public static void main(String[] args) throws IOException 
 	{
-		File path = new File(System.getProperty("user.dir")); //System.getProperty("user.dir") -> current directory
-		String fileName = null, gscName = null;
-		for (File file: path.listFiles())
-		{
-			if (file.isFile())
-			{
-				fileName = file.getName();
-				if (fileName.startsWith("GSC-B-") && fileName.endsWith(".gsc")) //validate GSC file name
-					gscName = fileName;
-			}
-		}
+		File folder = new File(GSC_PATH);
+		//filter out validated gsc file paths from everything else in the current working directory (I'd use RAF[] if it extended InputStream & OutputStream)
+		File[] gscPaths = folder.listFiles((dir, name) -> name.startsWith("GSC-B-") && name.toLowerCase().endsWith(".gsc"));
 		
-		if (gscName == null) System.exit(1);
-		//if several GSC files are found, the RAF will pick a random one lol - I'd add multiple GSC support if file I/O wasn't slow af
-		RandomAccessFile gsc = new RandomAccessFile(gscName, "r");
+		int gscIndex=0; short gsdtStart;
+		String output1, output2;
+		double start, finish, interval, total=0;
 		
-		if (checkGSC(gsc) == true) System.exit(1);
-		short gsdtStart = getStartOfGSDT(gsc);
+		RandomAccessFile[] gscFiles = new RandomAccessFile[gscPaths.length];
 		RandomAccessFile charTxt = new RandomAccessFile("txt/characters.txt","r");
 		RandomAccessFile itemsTxt = new RandomAccessFile("txt/items.txt","r");
-		
-		double start = System.currentTimeMillis();
-		String output1 = showBattleSettings(gsc, charTxt, itemsTxt, gsdtStart);
-		System.out.print(output1);
-		double finish = System.currentTimeMillis();
-		double time1 = finish-start;
-		
-		start = System.currentTimeMillis();
-		String output2 = showSceneInfo(gsc, charTxt, itemsTxt, gsdtStart);
-		System.out.print(output2);
-		finish = System.currentTimeMillis();
-		double time2 = finish-start;
-		
-		start = System.currentTimeMillis();
-		File outputTxt = new File("txt/output.txt");
-		FileWriter outputWriter = new FileWriter(outputTxt);
-		outputWriter.write(output1+output2);
-		outputWriter.close();
-		finish = System.currentTimeMillis();
-		double time3 = finish-start;
-		
-		System.out.println("\n[Performance]\nTime required for Battle Settings:   " + (time1)/1000 + " seconds.");
-		System.out.println("Time required for Scene Information: " + (time2)/1000 + " seconds.");
-		System.out.println("Time required to create Output File: " + (time3)/1000 + " seconds.");
-		System.out.println("Total amount of time elapsed:        " + (time1+time2+time3)/1000 + " seconds.");
 
+		for (File file: gscPaths) //initialize the RAF array with the gsc file paths
+		{
+			gscFiles[gscIndex] = new RandomAccessFile(file.getAbsolutePath(), "r");
+			gscIndex++;
+		}
+		gscIndex=0;
+		for (RandomAccessFile gsc: gscFiles)
+		{
+			gsdtStart = getStartOfGSDT(gsc);
+			String currName = gscPaths[gscIndex].getName();
+			System.out.println("> Reading " + currName + "...");
+			
+			start = System.currentTimeMillis();
+			output1 = showBattleSettings(gsc,charTxt,itemsTxt,gsdtStart);
+			finish = System.currentTimeMillis();
+			interval = finish-start; total += interval;
+			
+			start = System.currentTimeMillis();
+			output2 = showSceneInfo(gsc,charTxt,itemsTxt,gsdtStart);
+			finish = System.currentTimeMillis();
+			total += finish-start;
+			System.out.println("Time required for Battle Settings:   " + interval/1000 + " seconds."
+								+ "\nTime required for Scene Information: "+(finish-start)/1000 + " seconds.");
+			gscIndex++;
+			
+			File outputTxt = new File(OUT_PATH + currName.replace(".gsc", ".txt"));
+			if (outputTxt.exists()) continue; //skip already-made text files
+			FileWriter outputWriter = new FileWriter(outputTxt);
+			System.out.println("> Writing " + outputTxt.getName() + "...");
+			outputWriter.write(output1+output2);
+			outputWriter.close();
+
+			/* my attempt at solving the problem in parallel, which had the gsdtStart be calculated inside the method
+			new Thread(() -> {try {System.out.println(showBattleSettings(gsc, charTxt, itemsTxt));} catch (IOException e) {e.printStackTrace();}}); */
+		}
+		System.out.printf("Total time elapsed: %.0f minutes & %.3f seconds.", (total/1000)/60, (total/1000)%60);
 	}
 }
