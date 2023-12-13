@@ -14,6 +14,9 @@ To ensure the program works, it comes with a vanilla copy of the Common Enemy GS
 ![preview1](https://github.com/ViveTheModder/swag-studio/blob/main/img/demo.png)
 And just for fun, [here](https://github.com/ViveTheModder/swag-studio/blob/main/out/GSC-B-46.txt) is the output of the program if GSC-B-46.gsc (Galaxy Battle, the game's longest scenario) is given.
 
+In case the text file was hard to follow, here is a visualization of the scenario's structure.
+![preview2](https://github.com/ViveTheModder/swag-studio/blob/main/img/visualization.png)
+
 ## Known Issues
 * As of now, this program is command-line only.
 * I cannot get a proper runnable JAR release of the program because of certain issues with Eclipse's export feature.
