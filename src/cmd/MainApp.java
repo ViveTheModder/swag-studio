@@ -1,5 +1,5 @@
 package cmd;
-//Swag Studio by ViveTheModder
+//Swag Studio v1.1 by ViveTheModder
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -13,6 +13,7 @@ public class MainApp
 	private static int sharedPos=0;
 	static final String GSC_PATH = "./gsc/";
 	static final String OUT_PATH = "./out/";
+	
 	public static boolean checkGSC(RandomAccessFile gsc) throws IOException
 	{
 		boolean gscError = false;
@@ -89,6 +90,46 @@ public class MainApp
 		gsc.seek(pos+12);
 		return (short) gsc.getFilePointer();
 	}
+	public static String getSceneType(RandomAccessFile gsc, int gsacID, short gsdtStart, int initGSACpos) throws IOException
+	{
+		String output = "";
+		int pos=gsdtStart, currID=0;
+		short offset=0, currOffset=0;
+		gsc.seek(pos);
+		
+		if (gsacID==10049)
+			output+=" (Placeholder Defeat)";
+		else if (gsacID>=10040 && gsacID<=10048)
+			output+=" (Defeat)";
+		else if (gsacID==10039)
+			output+=" (Placeholder Victory)";
+		else if (gsacID>=10030)
+			output+=" (Victory)";
+		
+		while (pos!=gsc.length())
+		{
+			currID = getLittleEndianInt(gsc.readInt());
+			if (currID == gsacID)
+			{
+				offset = (short) ((pos-gsdtStart)/4);
+				break;
+			}
+			pos+=4; gsc.seek(pos);
+		}
+		
+		pos=initGSACpos; gsc.seek(pos);
+		while (currOffset!=21319) //21319 = GS (1st half of GSAC)
+		{
+			currOffset = getLittleEndianShort(gsc.readShort());
+			if (currOffset == offset)
+			{
+				output+=" - UNUSED"; break;
+			}
+			pos+=2; gsc.seek(pos);
+		}
+		
+		return output;
+	}
 	public static String getStringFromAnyID(RandomAccessFile txt, int ID) throws IOException
 	{		
 		int num=0; String currLine, name=null; Scanner sc = null;
@@ -152,9 +193,8 @@ public class MainApp
 			output += "Z-Item #" + (i-5) + ": " + getStringFromAnyID(itemsTxt, teams[charIndex][i]) + "\n";
 		return output;
 	}
-	public static String showBattleSettings(RandomAccessFile gsc, RandomAccessFile charTxt, RandomAccessFile itemsTxt, short gsdtStart) throws IOException
+	public static String showBattleSettings(RandomAccessFile gsc, RandomAccessFile bgmTxt, RandomAccessFile charTxt, RandomAccessFile itemsTxt, short gsdtStart) throws IOException
 	{
-		RandomAccessFile bgmTxt = new RandomAccessFile("txt/bgm.txt","r");
 		RandomAccessFile mapTxt = new RandomAccessFile("txt/maps.txt","r");
 		int bgmID, charIndex=0, curr=0, teamIndex=0, mapID;
 		short offset;
@@ -210,25 +250,34 @@ public class MainApp
 		output += "Teammate Count (Opponent): " + teamCnt[1] + "\n\n";
 		return output;
 	}
-	public static String showSceneInfo(RandomAccessFile gsc, RandomAccessFile charTxt, RandomAccessFile itemsTxt, short gsdtStart) throws IOException
+	public static String showSceneInfo(RandomAccessFile gsc, RandomAccessFile bgmTxt, RandomAccessFile charTxt, RandomAccessFile itemsTxt, short gsdtStart) throws IOException
 	{
 		RandomAccessFile condTxt = new RandomAccessFile("txt/conditions.txt","r");
 		RandomAccessFile eventTxt = new RandomAccessFile("txt/events.txt","r");
-		int curr=0, currID=10000, gsacType=0, param;
+		int bgmID=0, curr=0, currID=10000, gsacType=0, param, initGSACpos=sharedPos-1;
 		short offset; String output="";
 		
-		gsc.seek(sharedPos-1); output += "[Scene " + (currID-10000) + "]\n";
+		gsc.seek(initGSACpos);
+		output += "[Scene " + (currID-10000) + "]\n";
 		while (curr!=0x47534454) //traverse until GSDT is reached
 		{
 			curr = gsc.readInt();
 			currID = getLittleEndianInt(curr);
-			if (currID>=10000 && currID<10030) //display scene ID as long as it's not a victory/loss sequence
-				output += "\n[Scene " + (currID-10000) + "]\n";
+							
+			if (currID>10000 && currID<10050)
+				output += "\n[Scene " + (currID-10000) + getSceneType(gsc, currID, gsdtStart, initGSACpos) + "]\n";
 			if (curr == 0x01010900)
 			{
 				sharedPos+=5; gsc.seek(sharedPos);
 				offset = getLittleEndianShort(gsc.readShort());
 				gsacType = getIntFromOffset(gsc,offset,gsdtStart);
+			}
+			if (curr == 0x0101DD05)
+			{
+				sharedPos+=5; gsc.seek(sharedPos);
+				offset = getLittleEndianShort(gsc.readShort());
+				bgmID = getIntFromOffset(gsc,offset,gsdtStart);
+				output += "BG Music:  " + getStringFromAnyID(bgmTxt,bgmID) + "\n";
 			}
 			if (curr == 0x08610200)
 			{
@@ -306,6 +355,7 @@ public class MainApp
 		}
 		return output;
 	}
+
 	public static void main(String[] args) throws IOException 
 	{
 		File folder = new File(GSC_PATH);
@@ -317,6 +367,7 @@ public class MainApp
 		double start, finish, interval, total=0;
 		
 		RandomAccessFile[] gscFiles = new RandomAccessFile[gscPaths.length];
+		RandomAccessFile bgmTxt = new RandomAccessFile("txt/bgm.txt","r");
 		RandomAccessFile charTxt = new RandomAccessFile("txt/characters.txt","r");
 		RandomAccessFile itemsTxt = new RandomAccessFile("txt/items.txt","r");
 
@@ -333,12 +384,12 @@ public class MainApp
 			System.out.println("> Reading " + currName + "...");
 			
 			start = System.currentTimeMillis();
-			output1 = showBattleSettings(gsc,charTxt,itemsTxt,gsdtStart);
+			output1 = showBattleSettings(gsc,bgmTxt,charTxt,itemsTxt,gsdtStart);
 			finish = System.currentTimeMillis();
 			interval = finish-start; total += interval;
 			
 			start = System.currentTimeMillis();
-			output2 = showSceneInfo(gsc,charTxt,itemsTxt,gsdtStart);
+			output2 = showSceneInfo(gsc,bgmTxt,charTxt,itemsTxt,gsdtStart);
 			finish = System.currentTimeMillis();
 			total += finish-start;
 			System.out.println("Time required for Battle Settings:   " + interval/1000 + " seconds."
@@ -355,6 +406,6 @@ public class MainApp
 			/* my attempt at solving the problem in parallel, which had the gsdtStart be calculated inside the method
 			new Thread(() -> {try {System.out.println(showBattleSettings(gsc, charTxt, itemsTxt));} catch (IOException e) {e.printStackTrace();}}); */
 		}
-		System.out.printf("Total time elapsed: %.0f minutes & %.3f seconds.", (total/1000)/60, (total/1000)%60);
+		System.out.printf("Total time elapsed: %.0f minute(s) & %.3f seconds.", (total/1000)/60, (total/1000)%60);
 	}
 }
