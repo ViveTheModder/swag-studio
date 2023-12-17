@@ -1,5 +1,9 @@
 package cmd;
+<<<<<<< Updated upstream
 //Swag Studio v1.1 by ViveTheModder
+=======
+//Swag Studio v1.1.1 by ViveTheModder
+>>>>>>> Stashed changes
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -360,7 +364,10 @@ public class MainApp
 	{
 		File folder = new File(GSC_PATH);
 		//filter out validated gsc file paths from everything else in the current working directory (I'd use RAF[] if it extended InputStream & OutputStream)
-		File[] gscPaths = folder.listFiles((dir, name) -> name.startsWith("GSC-B-") && name.toLowerCase().endsWith(".gsc"));
+		File[] gscPaths = folder.listFiles((dir, name) -> 
+		(
+			name.startsWith("GSC-B-") && (name.toLowerCase().endsWith(".gsc") || name.toLowerCase().endsWith(".unk"))
+		)); //that's right, the tool detects UNK files too lmao
 		
 		int gscIndex=0; short gsdtStart;
 		String output1, output2;
@@ -380,9 +387,14 @@ public class MainApp
 		for (RandomAccessFile gsc: gscFiles)
 		{
 			gsdtStart = getStartOfGSDT(gsc);
-			String currName = gscPaths[gscIndex].getName();
-			System.out.println("> Reading " + currName + "...");
+			String fileName = gscPaths[gscIndex].getName();
 			
+			//get file extension
+			String fileExt = "";
+			int dotIndex = fileName.lastIndexOf('.');
+			if (dotIndex>=0) fileExt = fileName.substring(dotIndex);
+			
+			System.out.println("> Reading " + fileName + "...");
 			start = System.currentTimeMillis();
 			output1 = showBattleSettings(gsc,bgmTxt,charTxt,itemsTxt,gsdtStart);
 			finish = System.currentTimeMillis();
@@ -396,7 +408,7 @@ public class MainApp
 								+ "\nTime required for Scene Information: "+(finish-start)/1000 + " seconds.");
 			gscIndex++;
 			
-			File outputTxt = new File(OUT_PATH + currName.replace(".gsc", ".txt"));
+			File outputTxt = new File(OUT_PATH + fileName.replace(fileExt, ".txt"));
 			if (outputTxt.exists()) continue; //skip already-made text files
 			FileWriter outputWriter = new FileWriter(outputTxt);
 			System.out.println("> Writing " + outputTxt.getName() + "...");
