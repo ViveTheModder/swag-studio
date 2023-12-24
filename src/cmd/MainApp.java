@@ -1,9 +1,5 @@
 package cmd;
-<<<<<<< Updated upstream
-//Swag Studio v1.1 by ViveTheModder
-=======
-//Swag Studio v1.1.1 by ViveTheModder
->>>>>>> Stashed changes
+//Swag Studio v1.2 by ViveTheModder
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -15,6 +11,7 @@ import java.util.Scanner;
 public class MainApp 
 {
 	private static int sharedPos=0;
+	static final String CSV_PATH = "./csv/";
 	static final String GSC_PATH = "./gsc/";
 	static final String OUT_PATH = "./out/";
 	
@@ -134,21 +131,21 @@ public class MainApp
 		
 		return output;
 	}
-	public static String getStringFromAnyID(RandomAccessFile txt, int ID) throws IOException
+	public static String getStringFromAnyID(RandomAccessFile csv, int ID) throws IOException
 	{		
 		int num=0; String currLine, name=null; Scanner sc = null;
-		txt.seek(0);
-		while (txt.getFilePointer() != txt.length())
+		csv.seek(0);
+		while (csv.getFilePointer() != csv.length())
 		{
-			currLine = txt.readLine();
+			currLine = csv.readLine();
 			sc = new Scanner(currLine);
-			sc.useDelimiter(";");
+			sc.useDelimiter(",");
 			
 			while (sc.hasNext())
 			{
 				num = sc.nextInt();
 				name = sc.nextLine();
-				name = name.replace(";", "");
+				name = name.replace(",", "");
 			}
 			
 			if (num == ID)
@@ -159,7 +156,7 @@ public class MainApp
 		}
 		return null;
 	}
-	public static String getStringFromCondOrEventID(RandomAccessFile txt, int ID, boolean isCond) throws IOException
+	public static String getStringFromCondOrEventID(RandomAccessFile csv, int ID, boolean isCond) throws IOException
 	{
 		byte[] bytes = ByteBuffer.allocate(4).putInt(ID).array();
 		String output = "";
@@ -174,35 +171,38 @@ public class MainApp
 				if (ID>=16 && ID<30)  output += " [AUTO]";
 		}
 		
-		output = getStringFromAnyID(txt, ID) + output; //properly initialize output
+		output = getStringFromAnyID(csv, ID) + output; //properly initialize output
 		
 		if (isCond == true) //check for condition ID
 			if (ID == 34) output += " [AUTO]";
 
 		return output;
 	} 
-	public static String getCharInfo(int[][] teams, int charIndex, RandomAccessFile charTxt, RandomAccessFile itemsTxt) throws IOException
+	public static String getCharInfo(int[][] teams, int charIndex, RandomAccessFile charCsv, RandomAccessFile itemsCsv) throws IOException
 	{
 		String output; boolean isDmg;
 		if (teams[charIndex][2] == 0) isDmg = false; 
 		else isDmg = true;
-		output = "Character: " + getStringFromAnyID(charTxt, teams[charIndex][0]) + "\n";
+		output = "Character: " + getStringFromAnyID(charCsv, teams[charIndex][0]) + "\n";
 		output += "Costume: " + (teams[charIndex][1]+1) + "\n";
 		output += "Damaged: " + isDmg + "\n";
 		output += "COM Difficulty Level: " + teams[charIndex][3] + "\n";
-		output += "Strategy Z-Item: " + getStringFromAnyID(itemsTxt, teams[charIndex][4]) + "\n";
+		output += "Strategy Z-Item: " + getStringFromAnyID(itemsCsv, teams[charIndex][4]) + "\n";
 		output += "Initial Health: " + teams[charIndex][5] + "%\n";
 		
 		for (int i=6; i<=12; i++)
-			output += "Z-Item #" + (i-5) + ": " + getStringFromAnyID(itemsTxt, teams[charIndex][i]) + "\n";
+			output += "Z-Item #" + (i-5) + ": " + getStringFromAnyID(itemsCsv, teams[charIndex][i]) + "\n";
 		return output;
 	}
-	public static String showBattleSettings(RandomAccessFile gsc, RandomAccessFile bgmTxt, RandomAccessFile charTxt, RandomAccessFile itemsTxt, short gsdtStart) throws IOException
+	public static String showBattleSettings(RandomAccessFile gsc, RandomAccessFile bgmCsv, RandomAccessFile charCsv, RandomAccessFile itemsCsv, short gsdtStart) throws IOException
 	{
-		RandomAccessFile mapTxt = new RandomAccessFile("txt/maps.txt","r");
+		RandomAccessFile mapCsv = new RandomAccessFile(CSV_PATH+"maps.csv","r");
+		RandomAccessFile namesCsv = new RandomAccessFile(CSV_PATH+"names.csv","r");
+		RandomAccessFile sagasCsv = new RandomAccessFile(CSV_PATH+"sagas.csv","r");
+
 		int bgmID, charIndex=0, curr=0, teamIndex=0, mapID;
 		short offset;
-		String output="";
+		String output="", saga="";
 		int[] teamCnt = new int[2];
 		int[][] teams = new int[10][13];
 		
@@ -210,6 +210,26 @@ public class MainApp
 		while (curr!=0x01000300) //traverse until start of scene 0 is reached
 		{
 			curr = gsc.readInt();
+			if (curr == 0x01010200)
+			{
+				output += "[General Information]\n";
+				sharedPos+=5; gsc.seek(sharedPos);
+				offset = getLittleEndianShort(gsc.readShort());
+				int scenarioID = getIntFromOffset(gsc, offset, gsdtStart);
+				if (scenarioID<48)
+				{
+					output += "Name: " + getStringFromAnyID(namesCsv,scenarioID) + "\n";
+					if (scenarioID>=44) saga = getStringFromAnyID(sagasCsv,7);
+					else if (scenarioID>=40) saga = getStringFromAnyID(sagasCsv,6);
+					else if (scenarioID>=35) saga = getStringFromAnyID(sagasCsv,5);
+					else if (scenarioID>=19) saga = getStringFromAnyID(sagasCsv,4);
+					else if (scenarioID>=14) saga = getStringFromAnyID(sagasCsv,3);
+					else if (scenarioID>=7) saga = getStringFromAnyID(sagasCsv,2);
+					else if (scenarioID>=3) saga = getStringFromAnyID(sagasCsv,1);
+					else saga = getStringFromAnyID(sagasCsv,0);
+					output += "Saga: " + saga + "\n\n";
+				}
+			}
 			if (curr == 0x01050A00)
 			{
 				output += "[Battle Settings]\n";
@@ -219,8 +239,8 @@ public class MainApp
 				sharedPos+=4; gsc.seek(sharedPos);
 				offset = getLittleEndianShort(gsc.readShort());
 				bgmID = getIntFromOffset(gsc, offset, gsdtStart);
-				output += "Map: " + getStringFromAnyID(mapTxt,mapID) + "\n";
-				output += "BGM: " + getStringFromAnyID(bgmTxt,bgmID) + "\n\n";
+				output += "Map: " + getStringFromAnyID(mapCsv,mapID) + "\n";
+				output += "BGM: " + getStringFromAnyID(bgmCsv,bgmID) + "\n\n";
 			}
 			if (curr == 0x010E0C00)
 			{
@@ -246,7 +266,7 @@ public class MainApp
 					offset = getLittleEndianShort(gsc.readShort());
 					teams[charIndex][i] = getIntFromOffset(gsc, offset, gsdtStart);
 				}
-				output += getCharInfo(teams, charIndex, charTxt, itemsTxt) + "\n";
+				output += getCharInfo(teams, charIndex, charCsv, itemsCsv) + "\n";
 			}
 			sharedPos++; gsc.seek(sharedPos);
 		}
@@ -254,10 +274,10 @@ public class MainApp
 		output += "Teammate Count (Opponent): " + teamCnt[1] + "\n\n";
 		return output;
 	}
-	public static String showSceneInfo(RandomAccessFile gsc, RandomAccessFile bgmTxt, RandomAccessFile charTxt, RandomAccessFile itemsTxt, short gsdtStart) throws IOException
+	public static String showSceneInfo(RandomAccessFile gsc, RandomAccessFile bgmCsv, RandomAccessFile charCsv, RandomAccessFile itemsCsv, short gsdtStart) throws IOException
 	{
-		RandomAccessFile condTxt = new RandomAccessFile("txt/conditions.txt","r");
-		RandomAccessFile eventTxt = new RandomAccessFile("txt/events.txt","r");
+		RandomAccessFile condCsv = new RandomAccessFile(CSV_PATH+"conditions.csv","r");
+		RandomAccessFile eventCsv = new RandomAccessFile(CSV_PATH+"events.csv","r");
 		int bgmID=0, curr=0, currID=10000, gsacType=0, param, initGSACpos=sharedPos-1;
 		short offset; String output="";
 		
@@ -270,6 +290,19 @@ public class MainApp
 							
 			if (currID>10000 && currID<10050)
 				output += "\n[Scene " + (currID-10000) + getSceneType(gsc, currID, gsdtStart, initGSACpos) + "]\n";
+			/* start of GSC functions 08-14 */
+			if (curr == 0x01020800 && gsacType == -1)
+			{
+				sharedPos+=5; gsc.seek(sharedPos);
+				offset = getLittleEndianShort(gsc.readShort());
+				int eventID = getIntFromOffset(gsc,offset,gsdtStart);
+				sharedPos+=4; gsc.seek(sharedPos);
+				offset = getLittleEndianShort(gsc.readShort());
+				int eventCharID = getIntFromOffset(gsc,offset,gsdtStart);
+				output += "Event:     " + getStringFromCondOrEventID(eventCsv, eventID, false) + "\n";
+				if (eventCharID != -1) //only print out char ID if the event actually uses it
+					output += "Character: " + getStringFromAnyID(charCsv, eventCharID) + "\n";
+			}
 			if (curr == 0x01010900)
 			{
 				sharedPos+=5; gsc.seek(sharedPos);
@@ -281,8 +314,78 @@ public class MainApp
 				sharedPos+=5; gsc.seek(sharedPos);
 				offset = getLittleEndianShort(gsc.readShort());
 				bgmID = getIntFromOffset(gsc,offset,gsdtStart);
-				output += "BG Music:  " + getStringFromAnyID(bgmTxt,bgmID) + "\n";
+				output += "BG Music:  " + getStringFromAnyID(bgmCsv,bgmID) + "\n";
 			}
+			if (curr == 0x01000D00)
+			{
+				gsc.seek(sharedPos+4);
+				if (gsc.readInt() != 0x01000E00) output += "[Changes to Player 1 detected.]\n";
+			}
+			if (curr == 0x01000E00)
+			{
+				gsc.seek(sharedPos+4);
+				if (gsc.readInt() != 0x01020800) output += "[Changes to Opponent detected.]\n";
+			}
+			/* start of GSC properties from `0` to `a` type */
+			if (curr >= 0x08300100 && curr <= 0x08370100)
+			{
+				sharedPos++; gsc.seek(sharedPos);
+				int itemIndex = gsc.readByte()%48;
+				sharedPos+=4; gsc.seek(sharedPos);
+				offset = getLittleEndianShort(gsc.readShort());
+				int itemID = getIntFromOffset(gsc,offset,gsdtStart);
+				output += "> Z-Item #" + (itemIndex+1) + ": " + getStringFromAnyID(itemsCsv,itemID) + "\n";
+			}
+			if (curr == 0x08430100)
+			{
+				sharedPos+=5; gsc.seek(sharedPos);
+				offset = getLittleEndianShort(gsc.readShort());
+				param = getIntFromOffset(gsc,offset,gsdtStart);
+				output += "> Apply changes to Teammate " + (param+1) + "\n";
+			}
+			if (curr == 0x08460100 || curr == 0x08420100)
+			{
+				sharedPos+=5; gsc.seek(sharedPos);
+				offset = getLittleEndianShort(gsc.readShort());
+				param = getIntFromOffset(gsc,offset,gsdtStart);
+				output += "> Add " + param + "% more Ki\n";
+			}
+			if (curr == 0x08480100)
+			{
+				sharedPos+=5; gsc.seek(sharedPos);
+				offset = getLittleEndianShort(gsc.readShort());
+				param = getIntFromOffset(gsc,offset,gsdtStart);
+				output += "> Add " + param + "% more Health\n";
+			}
+			if (curr == 0x08490100)
+			{
+				sharedPos+=5; gsc.seek(sharedPos);
+				offset = getLittleEndianShort(gsc.readShort());
+				param = getIntFromOffset(gsc,offset,gsdtStart);
+				output += "> Set current Ki Amount to " + param + "%\n";
+			}
+			if (curr == 0x08620100)
+			{
+				sharedPos+=5; gsc.seek(sharedPos);
+				offset = getLittleEndianShort(gsc.readShort());
+				param = getIntFromOffset(gsc,offset,gsdtStart);
+				if (param == 1) output += "> Set current Blast Stock amount to " + param + "\n";
+			}
+			if (curr == 0x08680100)
+			{
+				sharedPos+=5; gsc.seek(sharedPos);
+				offset = getLittleEndianShort(gsc.readShort());
+				param = getIntFromOffset(gsc,offset,gsdtStart);
+				output += "> Set current Health to " + param + "%\n";
+			}
+			if (curr == 0x086C0100)
+			{
+				sharedPos+=5; gsc.seek(sharedPos);
+				offset = getLittleEndianShort(gsc.readShort());
+				param = getIntFromOffset(gsc,offset,gsdtStart);
+				output += "> Increment COM Difficulty Level by " + param + "\n";
+			}
+			
 			if (curr == 0x08610200)
 			{
 				sharedPos+=5; gsc.seek(sharedPos);
@@ -291,75 +394,12 @@ public class MainApp
 				sharedPos+=4; gsc.seek(sharedPos);
 				offset = getLittleEndianShort(gsc.readShort());
 				int gsacID = getIntFromOffset(gsc,offset,gsdtStart);
-				output += "Condition: " + getStringFromCondOrEventID(condTxt, condID, true) + "\n> GSAC ID: " + (gsacID-10000) + "\n";
-			}
-			if (curr == 0x01000D00)
-			{
-				gsc.seek(sharedPos+4);
-				if (gsc.readInt() != 0x01000E00)
-					output += "[Changes to Player 1 detected.]\n";
-			}
-			if (curr == 0x01000E00)
-			{
-				gsc.seek(sharedPos+4);
-				if (gsc.readInt() != 0x01020800)
-					output += "[Changes to Opponent detected.]\n";
-			}
-			if (curr == 0x08420100)
-			{
-				sharedPos+=5; gsc.seek(sharedPos);
-				offset = getLittleEndianShort(gsc.readShort());
-				param = getIntFromOffset(gsc,offset,gsdtStart); //this param is likely a boolean
-				if (param == 1) output += "> Gain full Ki Bars\n";
-			}
-			if (curr == 0x08430100)
-			{
-				sharedPos+=5; gsc.seek(sharedPos);
-				offset = getLittleEndianShort(gsc.readShort());
-				param = getIntFromOffset(gsc,offset,gsdtStart); //this param is likely a multiple of 5000 or less
-				output += "> Gain " + (param+1)*5000 + " HP (?)\n";
-			}
-			if (curr == 0x08460100)
-			{
-				sharedPos+=5; gsc.seek(sharedPos);
-				offset = getLittleEndianShort(gsc.readShort());
-				param = getIntFromOffset(gsc,offset,gsdtStart);
-				output += "> Set current Ki Amount to " + param + "%\n";
-			}
-			//0x08480100 and 0x08680100 work the same, although: the latter accepts 0 as a value while the former doesn't
-			if (curr == 0x08480100 || curr == 0x08680100)
-			{
-				sharedPos+=5; gsc.seek(sharedPos);
-				offset = getLittleEndianShort(gsc.readShort());
-				param = getIntFromOffset(gsc,offset,gsdtStart);
-				output += "> Set current Health to " + param + "%\n";
-			}
-			if (curr >= 0x08300100 && curr <= 0x08370100)
-			{
-				sharedPos++; gsc.seek(sharedPos);
-				int itemIndex = gsc.readByte()%48;
-				sharedPos+=4; gsc.seek(sharedPos);
-				offset = getLittleEndianShort(gsc.readShort());
-				int itemID = getIntFromOffset(gsc,offset,gsdtStart);
-				output += "> Z-Item #" + (itemIndex+1) + ": " + getStringFromAnyID(itemsTxt,itemID) + "\n";
-			}
-			if (curr == 0x01020800 && gsacType == -1)
-			{
-				sharedPos+=5; gsc.seek(sharedPos);
-				offset = getLittleEndianShort(gsc.readShort());
-				int eventID = getIntFromOffset(gsc,offset,gsdtStart);
-				sharedPos+=4; gsc.seek(sharedPos);
-				offset = getLittleEndianShort(gsc.readShort());
-				int eventCharID = getIntFromOffset(gsc,offset,gsdtStart);
-				output += "Event:     " + getStringFromCondOrEventID(eventTxt, eventID, false) + "\n";
-				if (eventCharID != -1) //only print out char ID if the event actually uses it
-					output += "Character: " + getStringFromAnyID(charTxt, eventCharID) + "\n";
+				output += "Condition: " + getStringFromCondOrEventID(condCsv, condID, true) + "\n> GSAC ID: " + (gsacID-10000) + "\n";
 			}
 			sharedPos++; gsc.seek(sharedPos);
 		}
 		return output;
 	}
-
 	public static void main(String[] args) throws IOException 
 	{
 		File folder = new File(GSC_PATH);
@@ -374,9 +414,9 @@ public class MainApp
 		double start, finish, interval, total=0;
 		
 		RandomAccessFile[] gscFiles = new RandomAccessFile[gscPaths.length];
-		RandomAccessFile bgmTxt = new RandomAccessFile("txt/bgm.txt","r");
-		RandomAccessFile charTxt = new RandomAccessFile("txt/characters.txt","r");
-		RandomAccessFile itemsTxt = new RandomAccessFile("txt/items.txt","r");
+		RandomAccessFile bgmCsv = new RandomAccessFile(CSV_PATH+"bgm.csv","r");
+		RandomAccessFile charCsv = new RandomAccessFile(CSV_PATH+"characters.csv","r");
+		RandomAccessFile itemsCsv = new RandomAccessFile(CSV_PATH+"items.csv","r");
 
 		for (File file: gscPaths) //initialize the RAF array with the gsc file paths
 		{
@@ -396,19 +436,19 @@ public class MainApp
 			
 			System.out.println("> Reading " + fileName + "...");
 			start = System.currentTimeMillis();
-			output1 = showBattleSettings(gsc,bgmTxt,charTxt,itemsTxt,gsdtStart);
+			output1 = showBattleSettings(gsc,bgmCsv,charCsv,itemsCsv,gsdtStart);
 			finish = System.currentTimeMillis();
 			interval = finish-start; total += interval;
 			
 			start = System.currentTimeMillis();
-			output2 = showSceneInfo(gsc,bgmTxt,charTxt,itemsTxt,gsdtStart);
+			output2 = showSceneInfo(gsc,bgmCsv,charCsv,itemsCsv,gsdtStart);
 			finish = System.currentTimeMillis();
 			total += finish-start;
 			System.out.println("Time required for Battle Settings:   " + interval/1000 + " seconds."
 								+ "\nTime required for Scene Information: "+(finish-start)/1000 + " seconds.");
 			gscIndex++;
 			
-			File outputTxt = new File(OUT_PATH + fileName.replace(fileExt, ".txt"));
+			File outputTxt = new File(OUT_PATH+fileName.replace(fileExt, ".txt"));
 			if (outputTxt.exists()) continue; //skip already-made text files
 			FileWriter outputWriter = new FileWriter(outputTxt);
 			System.out.println("> Writing " + outputTxt.getName() + "...");
@@ -416,7 +456,7 @@ public class MainApp
 			outputWriter.close();
 
 			/* my attempt at solving the problem in parallel, which had the gsdtStart be calculated inside the method
-			new Thread(() -> {try {System.out.println(showBattleSettings(gsc, charTxt, itemsTxt));} catch (IOException e) {e.printStackTrace();}}); */
+			new Thread(() -> {try {System.out.println(showBattleSettings(gsc, charCsv, itemsCsv));} catch (IOException e) {e.printStackTrace();}}); */
 		}
 		System.out.printf("Total time elapsed: %.0f minute(s) & %.3f seconds.", (total/1000)/60, (total/1000)%60);
 	}

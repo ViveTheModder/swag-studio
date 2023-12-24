@@ -1,0 +1,30 @@
+00,Battle Start
+01,Battle Finish
+02,Aerial Clash
+03,Map Destruction
+04,Normal Clash
+05,Aerial Clash
+06,Aerial Clash
+07,Aerial Clash
+08,Beam Struggle between Player 1's 1st Blast 2 and COM's 1st Blast 2
+09,Beam Struggle between Player 1's 1st Blast 2 and COM's 2nd Blast 2
+10,Beam Struggle between Player 1's 2nd Blast 2 and COM's 1st Blast 2
+11,Beam Struggle between Player 1's 2nd Blast 2 and COM's 2nd Blast 2
+12,Beam Struggle between Player 1 and the COM's Ultimate Blasts
+13,UNKNOWN
+14,UNKNOWN
+15,UNKNOWN
+16,Switch with Teammate #1
+17,Switch with Teammate #2
+18,Switch with Teammate #3
+19,Switch with Teammate #4
+20,Switch with Teammate #5
+21,Assign Transformation
+22,Assign Transformation
+23,Assign Fusion
+24,Go to MAX POWER Mode
+25,Trigger 1st Blast 1
+26,Trigger 2nd Blast 1
+27,Trigger 1st Blast 2
+28,Trigger 2nd Blast 2
+29,Trigger Ultimate Blast
