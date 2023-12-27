@@ -1,5 +1,5 @@
 package cmd;
-//Swag Studio v1.2 by ViveTheModder
+//Swag Studio v1.2.1 by ViveTheModder
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -132,8 +132,11 @@ public class MainApp
 		return output;
 	}
 	public static String getStringFromAnyID(RandomAccessFile csv, int ID) throws IOException
-	{		
+	{
 		int num=0; String currLine, name=null; Scanner sc = null;
+		if (ID == 65535) return "Immediate"; //65535 is only used for condition IDs, whereas 0xFFFFFFFF is used for null Z-Items
+		if (ID == -1) return name;
+		
 		csv.seek(0);
 		while (csv.getFilePointer() != csv.length())
 		{
@@ -150,11 +153,10 @@ public class MainApp
 			
 			if (num == ID)
 			{
-				sc.close();
-				return name;
+				sc.close(); return name;
 			}
 		}
-		return null;
+		return "Unknown (ID: " + ID + ")";
 	}
 	public static String getStringFromCondOrEventID(RandomAccessFile csv, int ID, boolean isCond) throws IOException
 	{
@@ -165,12 +167,13 @@ public class MainApp
 		{
 			bytes[2]=0; //treat it like a normal condition/event
 			ID = ByteBuffer.wrap(bytes).getInt();
-			output = " (Opponent)";
+			output += " (Opponent)";
 			
 			if (isCond == false) //check for event ID
 				if (ID>=16 && ID<30)  output += " [AUTO]";
+			if (isCond == true)
+				if (ID>=22 && ID<29) output += " [AUTO]";
 		}
-		
 		output = getStringFromAnyID(csv, ID) + output; //properly initialize output
 		
 		if (isCond == true) //check for condition ID
@@ -181,8 +184,9 @@ public class MainApp
 	public static String getCharInfo(int[][] teams, int charIndex, RandomAccessFile charCsv, RandomAccessFile itemsCsv) throws IOException
 	{
 		String output; boolean isDmg;
-		if (teams[charIndex][2] == 0) isDmg = false; 
+		if (teams[charIndex][2] == 0) isDmg = false;
 		else isDmg = true;
+		
 		output = "Character: " + getStringFromAnyID(charCsv, teams[charIndex][0]) + "\n";
 		output += "Costume: " + (teams[charIndex][1]+1) + "\n";
 		output += "Damaged: " + isDmg + "\n";
@@ -383,7 +387,7 @@ public class MainApp
 				sharedPos+=5; gsc.seek(sharedPos);
 				offset = getLittleEndianShort(gsc.readShort());
 				param = getIntFromOffset(gsc,offset,gsdtStart);
-				output += "> Increment COM Difficulty Level by " + param + "\n";
+				output += "> Set COM Difficulty Level to " + param + "\n";
 			}
 			
 			if (curr == 0x08610200)

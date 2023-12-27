@@ -189,7 +189,7 @@ Character: Bardock
 [Scene 7]
 Condition: Wait 30 seconds
 > GSAC ID: 8
-Condition: Lose 3 Health Bars (Opponent)
+Condition: Lose 3 Health Bars (Opponent) [AUTO]
 > GSAC ID: 8
 Condition: Win via K.O. (Opponent)
 > GSAC ID: 42
@@ -328,7 +328,7 @@ Condition: Win via K.O. (Opponent)
 [Changes to Player 1 detected.]
 > Add 100% more Health
 [Changes to Opponent detected.]
-> Increment COM Difficulty Level by 6
+> Set COM Difficulty Level to 6
 > Z-Item #1: Strength Enhancement
 > Z-Item #2: Defense +5
 > Z-Item #3: Attack +20
