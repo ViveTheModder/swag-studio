@@ -1,5 +1,5 @@
 package cmd;
-//Swag Studio v1.2.1 by ViveTheModder
+//Swag Studio v1.3 by ViveTheModder
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -7,6 +7,7 @@ import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.Scanner;
+import javax.swing.JOptionPane;
 
 public class MainApp 
 {
@@ -14,6 +15,7 @@ public class MainApp
 	static final String CSV_PATH = "./csv/";
 	static final String GSC_PATH = "./gsc/";
 	static final String OUT_PATH = "./out/";
+	static final String WINDOW_TITLE = "Swag Studio";
 	
 	public static boolean checkGSC(RandomAccessFile gsc) throws IOException
 	{
@@ -203,10 +205,13 @@ public class MainApp
 		RandomAccessFile mapCsv = new RandomAccessFile(CSV_PATH+"maps.csv","r");
 		RandomAccessFile namesCsv = new RandomAccessFile(CSV_PATH+"names.csv","r");
 		RandomAccessFile sagasCsv = new RandomAccessFile(CSV_PATH+"sagas.csv","r");
+		RandomAccessFile rewardCsv; //just a reference to the previous CSVs
 
 		int bgmID, charIndex=0, curr=0, teamIndex=0, mapID;
 		short offset;
 		String output="", saga="";
+		String[] rewardNames = {"Z-Points (from Easy to Hard)","Z-Items","Maps","Characters","Scenarios"};
+		int[] rewards = new int[15];
 		int[] teamCnt = new int[2];
 		int[][] teams = new int[10][13];
 		
@@ -234,9 +239,28 @@ public class MainApp
 					output += "Saga: " + saga + "\n\n";
 				}
 			}
+			if (curr == 0x010F1000)
+			{
+				output += "[Rewards]\n";
+				sharedPos+=5; gsc.seek(sharedPos);
+				for (int i=0; i<15; i++)
+				{
+					if (i>=12) rewardCsv = namesCsv;
+					else if (i>=9) rewardCsv = charCsv;
+					else if (i>=6) rewardCsv = mapCsv;
+					else rewardCsv = itemsCsv;
+					
+					if (i%3==0) output += "> Acquired " + rewardNames[(int)i/3] + "\n";
+					offset = getLittleEndianShort(gsc.readShort());
+					rewards[i] = getIntFromOffset(gsc, offset, gsdtStart);
+					sharedPos+=4; gsc.seek(sharedPos);
+					if (i>=3) output += getStringFromAnyID(rewardCsv,rewards[i]) + "\n";
+					else output += rewards[i] + "\n";
+				}
+			}
 			if (curr == 0x01050A00)
 			{
-				output += "[Battle Settings]\n";
+				output += "\n[Battle Settings]\n";
 				sharedPos+=5; gsc.seek(sharedPos);
 				offset = getLittleEndianShort(gsc.readShort());
 				mapID = getIntFromOffset(gsc, offset, gsdtStart);
@@ -313,13 +337,6 @@ public class MainApp
 				offset = getLittleEndianShort(gsc.readShort());
 				gsacType = getIntFromOffset(gsc,offset,gsdtStart);
 			}
-			if (curr == 0x0101DD05)
-			{
-				sharedPos+=5; gsc.seek(sharedPos);
-				offset = getLittleEndianShort(gsc.readShort());
-				bgmID = getIntFromOffset(gsc,offset,gsdtStart);
-				output += "BG Music:  " + getStringFromAnyID(bgmCsv,bgmID) + "\n";
-			}
 			if (curr == 0x01000D00)
 			{
 				gsc.seek(sharedPos+4);
@@ -329,6 +346,19 @@ public class MainApp
 			{
 				gsc.seek(sharedPos+4);
 				if (gsc.readInt() != 0x01020800) output += "[Changes to Opponent detected.]\n";
+			}
+			/* start of BGM functions */
+			if (curr == 0x0101DD05)
+			{
+				sharedPos+=5; gsc.seek(sharedPos);
+				offset = getLittleEndianShort(gsc.readShort());
+				bgmID = getIntFromOffset(gsc,offset,gsdtStart);
+				output += "BG Music:  " + getStringFromAnyID(bgmCsv,bgmID) + "\n";
+			}
+			if (curr == 0x0100DE05)
+			{
+				gsc.seek(sharedPos+4);
+				output += "Lower Current BG Music\n";
 			}
 			/* start of GSC properties from `0` to `a` type */
 			if (curr >= 0x08300100 && curr <= 0x08370100)
@@ -413,55 +443,68 @@ public class MainApp
 			name.startsWith("GSC-B-") && (name.toLowerCase().endsWith(".gsc") || name.toLowerCase().endsWith(".unk"))
 		)); //that's right, the tool detects UNK files too lmao
 		
-		int gscIndex=0; short gsdtStart;
-		String output1, output2;
-		double start, finish, interval, total=0;
+		int gscIndex=0, msgType=JOptionPane.INFORMATION_MESSAGE; short gsdtStart;
+		String output1, output2, timeString, msg="Time required for each GSC:\n";
+		double start, finish, time1, time2, interval, total=0;
 		
 		RandomAccessFile[] gscFiles = new RandomAccessFile[gscPaths.length];
 		RandomAccessFile bgmCsv = new RandomAccessFile(CSV_PATH+"bgm.csv","r");
 		RandomAccessFile charCsv = new RandomAccessFile(CSV_PATH+"characters.csv","r");
 		RandomAccessFile itemsCsv = new RandomAccessFile(CSV_PATH+"items.csv","r");
 
-		for (File file: gscPaths) //initialize the RAF array with the gsc file paths
+		if (gscPaths.length != 0)
 		{
-			gscFiles[gscIndex] = new RandomAccessFile(file.getAbsolutePath(), "r");
-			gscIndex++;
-		}
-		gscIndex=0;
-		for (RandomAccessFile gsc: gscFiles)
-		{
-			gsdtStart = getStartOfGSDT(gsc);
-			String fileName = gscPaths[gscIndex].getName();
-			
-			//get file extension
-			String fileExt = "";
-			int dotIndex = fileName.lastIndexOf('.');
-			if (dotIndex>=0) fileExt = fileName.substring(dotIndex);
-			
-			System.out.println("> Reading " + fileName + "...");
-			start = System.currentTimeMillis();
-			output1 = showBattleSettings(gsc,bgmCsv,charCsv,itemsCsv,gsdtStart);
-			finish = System.currentTimeMillis();
-			interval = finish-start; total += interval;
-			
-			start = System.currentTimeMillis();
-			output2 = showSceneInfo(gsc,bgmCsv,charCsv,itemsCsv,gsdtStart);
-			finish = System.currentTimeMillis();
-			total += finish-start;
-			System.out.println("Time required for Battle Settings:   " + interval/1000 + " seconds."
-								+ "\nTime required for Scene Information: "+(finish-start)/1000 + " seconds.");
-			gscIndex++;
-			
-			File outputTxt = new File(OUT_PATH+fileName.replace(fileExt, ".txt"));
-			if (outputTxt.exists()) continue; //skip already-made text files
-			FileWriter outputWriter = new FileWriter(outputTxt);
-			System.out.println("> Writing " + outputTxt.getName() + "...");
-			outputWriter.write(output1+output2);
-			outputWriter.close();
+			for (File file: gscPaths) //initialize the RAF array with the gsc file paths
+			{
+				gscFiles[gscIndex] = new RandomAccessFile(file.getAbsolutePath(), "r");
+				gscIndex++;
+			}
+			gscIndex=0;
+			for (RandomAccessFile gsc: gscFiles)
+			{
+				gsdtStart = getStartOfGSDT(gsc);
+				String fileName = gscPaths[gscIndex].getName();
+				
+				//get file extension
+				String fileExt = "";
+				int dotIndex = fileName.lastIndexOf('.');
+				if (dotIndex>=0) fileExt = fileName.substring(dotIndex);
+				
+				System.out.println("> Reading " + fileName + "...");
+				start = System.currentTimeMillis();
+				output1 = showBattleSettings(gsc,bgmCsv,charCsv,itemsCsv,gsdtStart);
+				finish = System.currentTimeMillis();
+				time1 = (finish-start)/1000; total += time1;
+				
+				start = System.currentTimeMillis();
+				output2 = showSceneInfo(gsc,bgmCsv,charCsv,itemsCsv,gsdtStart);
+				finish = System.currentTimeMillis();
+				time2 = (finish-start)/1000; total += time2;
+				System.out.println("Time required for Battle Settings:   " + time1 + " seconds."
+									+ "\nTime required for Scene Information: "+ time2 + " seconds.");
+				gscIndex++;
+				
+				File outputLog = new File(OUT_PATH+fileName.replace(fileExt, ".log"));
+				FileWriter outputWriter = new FileWriter(outputLog);
+				System.out.println("> Writing " + outputLog.getName() + "...");
+				
+				interval = (time1+time2);
+				timeString = String.format("%.3f", interval);
+				msg += fileName + " - " + timeString + " seconds\n";
+				outputWriter.write(output1+output2);
+				outputWriter.close();
+			}
+			System.out.printf("Total time elapsed: %.0f minute(s) & %.3f seconds.", total/60, total%60);
 
-			/* my attempt at solving the problem in parallel, which had the gsdtStart be calculated inside the method
-			new Thread(() -> {try {System.out.println(showBattleSettings(gsc, charCsv, itemsCsv));} catch (IOException e) {e.printStackTrace();}}); */
+			timeString = String.format("%.0f", total/60);
+			msg += "\nTotal time elapsed:\n" + timeString + " minutes & ";
+			timeString = String.format("%.3f", total%60);
+			msg += timeString + " seconds";
 		}
-		System.out.printf("Total time elapsed: %.0f minute(s) & %.3f seconds.", (total/1000)/60, (total/1000)%60);
+		else 
+		{ 
+			msg="No GSC files found!"; msgType = JOptionPane.ERROR_MESSAGE;
+		}
+		JOptionPane.showMessageDialog(null, msg, WINDOW_TITLE, msgType);
 	}
 }
