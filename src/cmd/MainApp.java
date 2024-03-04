@@ -1,5 +1,5 @@
 package cmd;
-//Swag Studio v1.3 by ViveTheModder
+//Swag Studio v1.4 by ViveTheModder
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -12,14 +12,17 @@ import javax.swing.JOptionPane;
 public class MainApp 
 {
 	private static int sharedPos=0;
+	private static int[][] teams = new int[10][13];
+	static final int INFO = JOptionPane.INFORMATION_MESSAGE;
 	static final String CSV_PATH = "./csv/";
 	static final String GSC_PATH = "./gsc/";
 	static final String OUT_PATH = "./out/";
 	static final String WINDOW_TITLE = "Swag Studio";
 	
-	public static boolean checkGSC(RandomAccessFile gsc) throws IOException
+	public static boolean isFaultyGSC(RandomAccessFile gsc) throws IOException
 	{
 		boolean gscError = false;
+		gsc.seek(0); //added this just to make sure it always starts from 0
 		int gscf = gsc.readInt(); //GSCF (Game Scenario Contents of File)
 		if (gscf != 0x47534346) gscError = true; 
 		
@@ -200,7 +203,7 @@ public class MainApp
 			output += "Z-Item #" + (i-5) + ": " + getStringFromAnyID(itemsCsv, teams[charIndex][i]) + "\n";
 		return output;
 	}
-	public static String showBattleSettings(RandomAccessFile gsc, RandomAccessFile bgmCsv, RandomAccessFile charCsv, RandomAccessFile itemsCsv, short gsdtStart) throws IOException
+	public static String showCommonInfo(RandomAccessFile gsc, RandomAccessFile bgmCsv, RandomAccessFile charCsv, RandomAccessFile itemsCsv, short gsdtStart) throws IOException
 	{
 		RandomAccessFile mapCsv = new RandomAccessFile(CSV_PATH+"maps.csv","r");
 		RandomAccessFile namesCsv = new RandomAccessFile(CSV_PATH+"names.csv","r");
@@ -213,7 +216,6 @@ public class MainApp
 		String[] rewardNames = {"Z-Points (from Easy to Hard)","Z-Items","Maps","Characters","Scenarios"};
 		int[] rewards = new int[15];
 		int[] teamCnt = new int[2];
-		int[][] teams = new int[10][13];
 		
 		sharedPos=0;
 		while (curr!=0x01000300) //traverse until start of scene 0 is reached
@@ -302,12 +304,12 @@ public class MainApp
 		output += "Teammate Count (Opponent): " + teamCnt[1] + "\n\n";
 		return output;
 	}
-	public static String showSceneInfo(RandomAccessFile gsc, RandomAccessFile bgmCsv, RandomAccessFile charCsv, RandomAccessFile itemsCsv, short gsdtStart) throws IOException
+	public static String showSceneInfo(RandomAccessFile gsc, RandomAccessFile bgmCsv, RandomAccessFile charCsv, RandomAccessFile itemsCsv, short gsdtStart, int option) throws IOException
 	{
 		RandomAccessFile condCsv = new RandomAccessFile(CSV_PATH+"conditions.csv","r");
 		RandomAccessFile eventCsv = new RandomAccessFile(CSV_PATH+"events.csv","r");
-		int bgmID=0, curr=0, currID=10000, gsacType=0, param, initGSACpos=sharedPos-1;
-		short offset; String output="";
+		int bgmID=0, charIndex, curr=0, currID=10000, gsacType=0, inputInt, initGSACpos=sharedPos-1;
+		short offset; float inputFloat; String output="";
 		
 		gsc.seek(initGSACpos);
 		output += "[Scene " + (currID-10000) + "]\n";
@@ -330,6 +332,12 @@ public class MainApp
 				output += "Event:     " + getStringFromCondOrEventID(eventCsv, eventID, false) + "\n";
 				if (eventCharID != -1) //only print out char ID if the event actually uses it
 					output += "Character: " + getStringFromAnyID(charCsv, eventCharID) + "\n";
+			}
+			if (curr == 0x01000700)
+			{
+				gsc.seek(sharedPos+4);
+				if (gsc.readInt() != 0x01000D00) output += "(Battle Info)\n";
+				else output += "(No Battle Info)\n";
 			}
 			if (curr == 0x01010900)
 			{
@@ -374,52 +382,51 @@ public class MainApp
 			{
 				sharedPos+=5; gsc.seek(sharedPos);
 				offset = getLittleEndianShort(gsc.readShort());
-				param = getIntFromOffset(gsc,offset,gsdtStart);
-				output += "> Apply changes to Teammate " + (param+1) + "\n";
+				inputInt = getIntFromOffset(gsc,offset,gsdtStart);
+				output += "> Apply changes to Teammate " + (inputInt+1) + "\n";
 			}
 			if (curr == 0x08460100 || curr == 0x08420100)
 			{
 				sharedPos+=5; gsc.seek(sharedPos);
 				offset = getLittleEndianShort(gsc.readShort());
-				param = getIntFromOffset(gsc,offset,gsdtStart);
-				output += "> Add " + param + "% more Ki\n";
+				inputInt = getIntFromOffset(gsc,offset,gsdtStart);
+				output += "> Add " + inputInt + "% more Ki\n";
 			}
 			if (curr == 0x08480100)
 			{
 				sharedPos+=5; gsc.seek(sharedPos);
 				offset = getLittleEndianShort(gsc.readShort());
-				param = getIntFromOffset(gsc,offset,gsdtStart);
-				output += "> Add " + param + "% more Health\n";
+				inputInt = getIntFromOffset(gsc,offset,gsdtStart);
+				output += "> Add " + inputInt + "% more Health\n";
 			}
 			if (curr == 0x08490100)
 			{
 				sharedPos+=5; gsc.seek(sharedPos);
 				offset = getLittleEndianShort(gsc.readShort());
-				param = getIntFromOffset(gsc,offset,gsdtStart);
-				output += "> Set current Ki Amount to " + param + "%\n";
+				inputInt = getIntFromOffset(gsc,offset,gsdtStart);
+				output += "> Set current Ki Amount to " + inputInt + "%\n";
 			}
 			if (curr == 0x08620100)
 			{
 				sharedPos+=5; gsc.seek(sharedPos);
 				offset = getLittleEndianShort(gsc.readShort());
-				param = getIntFromOffset(gsc,offset,gsdtStart);
-				if (param == 1) output += "> Set current Blast Stock amount to " + param + "\n";
+				inputInt = getIntFromOffset(gsc,offset,gsdtStart);
+				if (inputInt == 1) output += "> Set current Blast Stock amount to " + inputInt + "\n";
 			}
 			if (curr == 0x08680100)
 			{
 				sharedPos+=5; gsc.seek(sharedPos);
 				offset = getLittleEndianShort(gsc.readShort());
-				param = getIntFromOffset(gsc,offset,gsdtStart);
-				output += "> Set current Health to " + param + "%\n";
+				inputInt = getIntFromOffset(gsc,offset,gsdtStart);
+				output += "> Set current Health to " + inputInt + "%\n";
 			}
 			if (curr == 0x086C0100)
 			{
 				sharedPos+=5; gsc.seek(sharedPos);
 				offset = getLittleEndianShort(gsc.readShort());
-				param = getIntFromOffset(gsc,offset,gsdtStart);
-				output += "> Set COM Difficulty Level to " + param + "\n";
-			}
-			
+				inputInt = getIntFromOffset(gsc,offset,gsdtStart);
+				output += "> Set COM Difficulty Level to " + inputInt + "\n";
+			}		
 			if (curr == 0x08610200)
 			{
 				sharedPos+=5; gsc.seek(sharedPos);
@@ -430,10 +437,301 @@ public class MainApp
 				int gsacID = getIntFromOffset(gsc,offset,gsdtStart);
 				output += "Condition: " + getStringFromCondOrEventID(condCsv, condID, true) + "\n> GSAC ID: " + (gsacID-10000) + "\n";
 			}
+			/* cinematic option - I really wanted to split this method in 2, but I kept making things worse */
+			if (option==0)
+			{
+				//start of GSC functions 01-06
+				if (curr == 0x01010100)
+				{
+					sharedPos+=5; gsc.seek(sharedPos);
+					offset = getLittleEndianShort(gsc.readShort());
+					inputFloat = getFloatFromOffset(gsc,offset,gsdtStart);
+					output += "Wait " + inputFloat + " seconds\n";
+				}
+				if (curr == 0x01000300) output += "(Cinematic Info)\n";
+				if (curr == 0x01000600) output += "Disable ALL VFX\n";
+				
+				//start of GSC functions 801-810
+				if (curr == 0x01072103)
+				{
+					sharedPos+=5; gsc.seek(sharedPos);
+					offset = getLittleEndianShort(gsc.readShort());
+					charIndex = getIntFromOffset(gsc,offset,gsdtStart);
+					
+					if (charIndex >= 32768)
+					{
+						charIndex%=32768; charIndex+=5;
+					}
+					
+					output += "Change Position/Rotation for " + getStringFromAnyID(charCsv, teams[charIndex][0]) + "\n";
+					for (int i=1; i<7; i++)
+					{
+						if (i==1) output+="> Position (XYZ): ";
+						if (i==4) output+="\n> Rotation (XYZ): ";
+						sharedPos+=4; gsc.seek(sharedPos);
+						offset = getLittleEndianShort(gsc.readShort());
+						inputFloat = getFloatFromOffset(gsc,offset,gsdtStart);
+						output += inputFloat + " ";
+					}
+					output += "\n";
+				}
+				if (curr == 0x01042203)
+				{
+					sharedPos+=5; gsc.seek(sharedPos);
+					offset = getLittleEndianShort(gsc.readShort());
+					charIndex = getIntFromOffset(gsc,offset,gsdtStart);
+					
+					if (charIndex >= 32768)
+					{
+						charIndex%=32768; charIndex+=5;
+					}
+					
+					output += "Change Position for " + getStringFromAnyID(charCsv, teams[charIndex][0]) + "\n";
+					for (int i=1; i<4; i++)
+					{
+						output+="> Position (XYZ): ";
+						sharedPos+=4; gsc.seek(sharedPos);
+						offset = getLittleEndianShort(gsc.readShort());
+						inputFloat = getFloatFromOffset(gsc,offset,gsdtStart);
+						output += inputFloat + " ";
+					}
+					output += "\n";
+				}
+				if (curr == 0x01042303)
+				{
+					sharedPos+=5; gsc.seek(sharedPos);
+					offset = getLittleEndianShort(gsc.readShort());
+					charIndex = getIntFromOffset(gsc,offset,gsdtStart);
+					
+					if (charIndex >= 32768)
+					{
+						charIndex%=32768; charIndex+=5;
+					}
+					
+					output += "Change Rotation for " + getStringFromAnyID(charCsv, teams[charIndex][0]) + "\n";
+					for (int i=1; i<4; i++)
+					{
+						output+="\n> Rotation (XYZ): ";
+						sharedPos+=4; gsc.seek(sharedPos);
+						offset = getLittleEndianShort(gsc.readShort());
+						inputFloat = getFloatFromOffset(gsc,offset,gsdtStart);
+						output += inputFloat + " ";
+					}
+					output += "\n";
+				}
+				if (curr == 0x01012403)
+				{
+					sharedPos+=5; gsc.seek(sharedPos);
+					offset = getLittleEndianShort(gsc.readShort());
+					charIndex = getIntFromOffset(gsc,offset,gsdtStart);
+					
+					if (charIndex >= 32768)
+					{
+						charIndex%=32768; charIndex+=5;
+					}
+					output += "Make " + getStringFromAnyID(charCsv, teams[charIndex][0]) + " Visible\n";
+				}
+				if (curr == 0x01012503)
+				{
+					sharedPos+=5; gsc.seek(sharedPos);
+					offset = getLittleEndianShort(gsc.readShort());
+					charIndex = getIntFromOffset(gsc,offset,gsdtStart);
+					
+					if (charIndex >= 32768)
+					{
+						charIndex%=32768; charIndex+=5;
+					}
+					output += "Make " + getStringFromAnyID(charCsv, teams[charIndex][0]) + " Invisible\n";
+				}
+				if (curr == 0x01012603)
+				{
+					sharedPos+=5; gsc.seek(sharedPos);
+					offset = getLittleEndianShort(gsc.readShort());
+					charIndex = getIntFromOffset(gsc,offset,gsdtStart);
+					
+					if (charIndex >= 32768)
+					{
+						charIndex%=32768; charIndex+=5;
+					}
+					output += "Enable Aura Charge for " + getStringFromAnyID(charCsv, teams[charIndex][0]) + "\n";
+				}
+				if (curr == 0x01012703)
+				{
+					sharedPos+=5; gsc.seek(sharedPos);
+					offset = getLittleEndianShort(gsc.readShort());
+					charIndex = getIntFromOffset(gsc,offset,gsdtStart);
+					
+					if (charIndex >= 32768)
+					{
+						charIndex%=32768; charIndex+=5;
+					}
+					output += "Disable Aura Charge for " + getStringFromAnyID(charCsv, teams[charIndex][0]) + "\n";
+				}
+				if (curr == 0x01012803)
+				{
+					sharedPos+=5; gsc.seek(sharedPos);
+					offset = getLittleEndianShort(gsc.readShort());
+					charIndex = getIntFromOffset(gsc,offset,gsdtStart);
+					
+					if (charIndex >= 32768)
+					{
+						charIndex%=32768; charIndex+=5;
+					}
+					output += "Enable Ki Charge for " + getStringFromAnyID(charCsv, teams[charIndex][0]) + "\n";
+				}
+				if (curr == 0x01012903)
+				{
+					sharedPos+=5; gsc.seek(sharedPos);
+					offset = getLittleEndianShort(gsc.readShort());
+					charIndex = getIntFromOffset(gsc,offset,gsdtStart);
+					
+					if (charIndex >= 32768)
+					{
+						charIndex%=32768; charIndex+=5;
+					}
+					output += "Disable Ki Charge for " + getStringFromAnyID(charCsv, teams[charIndex][0]) + "\n";
+				}
+				if (curr == 0x01012A03)
+				{
+					sharedPos+=5; gsc.seek(sharedPos);
+					offset = getLittleEndianShort(gsc.readShort());
+					charIndex = getIntFromOffset(gsc,offset,gsdtStart);
+					
+					if (charIndex >= 32768)
+					{
+						charIndex%=32768; charIndex+=5;
+					}
+					output += "Enable MPM Explosion for " + getStringFromAnyID(charCsv, teams[charIndex][0]) + "\n";
+				}
+				//start of GSC function 901
+				if (curr == 0x01028503)
+				{
+					sharedPos+=5; gsc.seek(sharedPos);
+					offset = getLittleEndianShort(gsc.readShort());
+					charIndex = getIntFromOffset(gsc,offset,gsdtStart);
+					
+					if (charIndex >= 32768)
+					{
+						charIndex%=32768; charIndex+=5;
+					}
+					sharedPos+=4; gsc.seek(sharedPos);
+					offset = getLittleEndianShort(gsc.readShort());
+					inputInt = getIntFromOffset(gsc,offset,gsdtStart);
+					
+					output += "Play Animation " + inputInt + " for " + getStringFromAnyID(charCsv, teams[charIndex][0]) + "\n";
+				}
+				
+				//start of GSC functions 1001-1003
+				if (curr == 0x0101E903)
+				{
+					sharedPos+=5; gsc.seek(sharedPos);
+					offset = getLittleEndianShort(gsc.readShort());
+					inputFloat = getFloatFromOffset(gsc,offset,gsdtStart);
+					output += "Add " + inputFloat + " s fade-out\n";
+				}
+				if (curr == 0x0101EA03)
+				{
+					sharedPos+=5; gsc.seek(sharedPos);
+					offset = getLittleEndianShort(gsc.readShort());
+					inputFloat = getFloatFromOffset(gsc,offset,gsdtStart);
+					output += "Add " + inputFloat + " s fade-in\n";
+				}	
+				if (curr == 0x0101EB03) output += "Disable Current Fade\n";
+				
+				//start of GSC functions 1201-1205
+				if (curr == 0x0106B104)
+				{
+					output += "[Initial Camera Point]\n";
+					sharedPos+=5; gsc.seek(sharedPos);
+					offset = getLittleEndianShort(gsc.readShort());
+					inputFloat = getFloatFromOffset(gsc,offset,gsdtStart);
+					output += "> Position (XYZ): " + inputFloat + " ";
+					
+					for (int i=1; i<6; i++)
+					{
+						if (i==3) output+="\n> Rotation (XYZ): ";
+						sharedPos+=4; gsc.seek(sharedPos);
+						offset = getLittleEndianShort(gsc.readShort());
+						inputFloat = getFloatFromOffset(gsc,offset,gsdtStart);
+						output += inputFloat + " ";
+					}
+					output += "\n";
+				}
+				if (curr == 0x0100B204)
+				{
+					output += "[Additional Camera Point]\n";
+					sharedPos+=9; gsc.seek(sharedPos);
+					offset = getLittleEndianShort(gsc.readShort());
+					inputFloat = getFloatFromOffset(gsc,offset,gsdtStart);
+					output += "> Transition Time: " + inputFloat + " ";
+					
+					for (int i=1; i<7; i++)
+					{
+						if (i==1) output+="\n> Position (XYZ): ";
+						if (i==4) output+="\n> Rotation (XYZ): ";
+						sharedPos+=4; gsc.seek(sharedPos);
+						offset = getLittleEndianShort(gsc.readShort());
+						inputFloat = getFloatFromOffset(gsc,offset,gsdtStart);
+						output += inputFloat + " ";
+					}
+					output += "\n";
+				}
+				if (curr == 0x0101B404)
+				{
+					sharedPos+=5; gsc.seek(sharedPos);
+					offset = getLittleEndianShort(gsc.readShort());
+					inputFloat = getFloatFromOffset(gsc,offset,gsdtStart);
+					output += "Shake Camera for " + inputFloat + " seconds\n";
+				}
+				if (curr == 0x0101B504) output += "Disable Current Camera Shake";
+				
+				//start of GSC functions 1603
+				if (curr == 0x01024306)
+				{
+					sharedPos+=5; gsc.seek(sharedPos);
+					offset = getLittleEndianShort(gsc.readShort());
+					charIndex = getIntFromOffset(gsc,offset,gsdtStart);
+					
+					if (charIndex >= 32768)
+					{
+						charIndex%=32768; charIndex+=5;
+					}
+					sharedPos+=4; gsc.seek(sharedPos);
+					offset = getLittleEndianShort(gsc.readShort());
+					inputInt = getIntFromOffset(gsc,offset,gsdtStart);
+					
+					if (charIndex!=32767)
+						output += "Play Voice Line " + inputInt + " for " + getStringFromAnyID(charCsv, teams[charIndex][0]) + "\n";
+					else output += "Play Voice Line " + inputInt + " for Background Character\n";
+				}
+				/* common properties */
+				if (curr == 0x08570000) output += "> Change fade-out color to white\n";
+				if (curr == 0x086C0000) output += "> Loop property detected\n";
+				if (curr == 0x08770000) output += "> Wait property detected\n";
+				if (curr == 0x087401000)
+				{
+					sharedPos+=5; gsc.seek(sharedPos);
+					offset = getLittleEndianShort(gsc.readShort());
+					inputFloat = getFloatFromOffset(gsc,offset,gsdtStart);
+					output += "Speed Coefficient: " + inputFloat + "\n";
+				}
+				//background voice lines
+				if (curr == 0x08760200)
+				{
+					sharedPos+=5; gsc.seek(sharedPos);
+					offset = getLittleEndianShort(gsc.readShort());
+					int condID = getIntFromOffset(gsc,offset,gsdtStart);
+					sharedPos+=4; gsc.seek(sharedPos);
+					offset = getLittleEndianShort(gsc.readShort());
+					inputInt = getIntFromOffset(gsc,offset,gsdtStart);
+					output += "Condition: " + getStringFromCondOrEventID(condCsv, condID, true) + "\n> Voice Line ID: " + inputInt + "\n";
+				}
+			}
 			sharedPos++; gsc.seek(sharedPos);
 		}
 		return output;
 	}
+	
 	public static void main(String[] args) throws IOException 
 	{
 		File folder = new File(GSC_PATH);
@@ -443,9 +741,9 @@ public class MainApp
 			name.startsWith("GSC-B-") && (name.toLowerCase().endsWith(".gsc") || name.toLowerCase().endsWith(".unk"))
 		)); //that's right, the tool detects UNK files too lmao
 		
-		int gscIndex=0, msgType=JOptionPane.INFORMATION_MESSAGE; short gsdtStart;
-		String output1, output2, timeString, msg="Time required for each GSC:\n";
-		double start, finish, time1, time2, interval, total=0;
+		int gscIndex=0, msgType=INFO, option=1; short gsdtStart;
+		String output1, output2, timeString, msg="Would you like to include cinematic info for each log?";
+		double start, finish, time1=0, time2=0, interval, total=0;
 		
 		RandomAccessFile[] gscFiles = new RandomAccessFile[gscPaths.length];
 		RandomAccessFile bgmCsv = new RandomAccessFile(CSV_PATH+"bgm.csv","r");
@@ -459,11 +757,21 @@ public class MainApp
 				gscFiles[gscIndex] = new RandomAccessFile(file.getAbsolutePath(), "r");
 				gscIndex++;
 			}
-			gscIndex=0;
-			for (RandomAccessFile gsc: gscFiles)
+			//check for command line arguments
+			if (args.length == 0) JOptionPane.showConfirmDialog(null, msg, WINDOW_TITLE, 0);
+			else
 			{
+				if (args[0]==("-c")) option=0; //skip confirm dialog if argument is given
+				else JOptionPane.showConfirmDialog(null, msg, WINDOW_TITLE, 0);
+			}
+				
+			msg = "Time required for each GSC:\n";
+			
+			for (int i=0; i<gscFiles.length; i++)
+			{
+				RandomAccessFile gsc = gscFiles[i];
+				String fileName = gscPaths[i].getName();
 				gsdtStart = getStartOfGSDT(gsc);
-				String fileName = gscPaths[gscIndex].getName();
 				
 				//get file extension
 				String fileExt = "";
@@ -471,15 +779,21 @@ public class MainApp
 				if (dotIndex>=0) fileExt = fileName.substring(dotIndex);
 				
 				System.out.println("> Reading " + fileName + "...");
+				if (isFaultyGSC(gsc))
+				{
+					System.out.println("> Skipping " + fileName + " (faulty GSC)...");
+					continue;
+				}
 				start = System.currentTimeMillis();
-				output1 = showBattleSettings(gsc,bgmCsv,charCsv,itemsCsv,gsdtStart);
+				output1 = showCommonInfo(gsc,bgmCsv,charCsv,itemsCsv,gsdtStart);
 				finish = System.currentTimeMillis();
 				time1 = (finish-start)/1000; total += time1;
 				
 				start = System.currentTimeMillis();
-				output2 = showSceneInfo(gsc,bgmCsv,charCsv,itemsCsv,gsdtStart);
+				output2 = showSceneInfo(gsc,bgmCsv,charCsv,itemsCsv,gsdtStart,option);
 				finish = System.currentTimeMillis();
-				time2 = (finish-start)/1000; total += time2;
+				time2 = (finish-start)/1000; total += time1;
+
 				System.out.println("Time required for Battle Settings:   " + time1 + " seconds."
 									+ "\nTime required for Scene Information: "+ time2 + " seconds.");
 				gscIndex++;
