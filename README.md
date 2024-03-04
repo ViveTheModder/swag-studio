@@ -8,6 +8,7 @@ It can display the following:
 * what Z-Items are equipped/removed during a specific scene;
 * what health or ki bonuses there may or may not be present;
 * what events occur, and what characters they use (if any).
+
 Although, the user can also choose to display cinematic information, which refers to:
 * character positions/rotations;
 * character animations (atm, not every animation has been documented properly, so the program just returns the animation ID);
