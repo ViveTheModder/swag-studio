@@ -2,6 +2,28 @@
 Name: Galaxy Battle
 Saga: What-If Saga
 
+[Rewards]
+> Acquired Z-Points (from Easy to Hard)
+2500
+3000
+3500
+> Acquired Z-Items
+Draconic Aura
+null
+null
+> Acquired Maps
+null
+null
+null
+> Acquired Characters
+King Vegeta 
+Great Ape King Vegeta
+null
+> Acquired Scenarios
+Unexpected Help
+null
+null
+
 [Battle Settings]
 Map: Outer Space
 BGM: Hot Soul
@@ -133,6 +155,7 @@ Teammate Count (Player 1): 4
 Teammate Count (Opponent): 4
 
 [Scene 0]
+(Battle Info)
 Condition: Win via K.O.
 > GSAC ID: 1
 Condition: Win via K.O. (Opponent)
@@ -140,6 +163,7 @@ Condition: Win via K.O. (Opponent)
 Event:     Battle Finish
 
 [Scene 1]
+(Battle Info)
 Condition: Immediate
 > GSAC ID: 2
 [Changes to Opponent detected.]
@@ -148,6 +172,7 @@ Event:     Switch with Teammate #2 (Opponent) [AUTO]
 Character: Dodoria
 
 [Scene 2]
+(Battle Info)
 Condition: Win via K.O.
 > GSAC ID: 3
 Condition: Win via K.O. (Opponent)
@@ -155,6 +180,7 @@ Condition: Win via K.O. (Opponent)
 Event:     Battle Finish
 
 [Scene 3]
+(Battle Info)
 Condition: Wait 10 seconds
 > GSAC ID: 5
 Condition: Win via K.O.
@@ -167,6 +193,7 @@ Event:     Switch with Teammate #3 (Opponent) [AUTO]
 Character: Zarbon
 
 [Scene 5]
+(Battle Info)
 Condition: Wait 30 seconds
 > GSAC ID: 6
 Condition: Win via K.O. (Opponent)
@@ -179,6 +206,7 @@ Event:     Switch with Teammate #3
 Character: Fasha
 
 [Scene 6]
+(Battle Info)
 Condition: Immediate
 > GSAC ID: 7
 [Changes to Player 1 detected.]
@@ -187,6 +215,7 @@ Event:     Switch with Teammate #2
 Character: Bardock
 
 [Scene 7]
+(Battle Info)
 Condition: Wait 30 seconds
 > GSAC ID: 8
 Condition: Lose 3 Health Bars (Opponent) [AUTO]
@@ -203,7 +232,9 @@ Condition: Win via K.O.
 Event:     Battle Finish
 
 [Scene 8]
+Lower Current BG Music
 BG Music:  Caution!
+(Battle Info)
 Condition: Wait 10 seconds
 > GSAC ID: 9
 Condition: Win via K.O. (Opponent)
@@ -220,6 +251,7 @@ Event:     Assign Transformation (Opponent) [AUTO]
 Character: Zarbon - Post-Transformation
 
 [Scene 9]
+(Battle Info)
 Condition: Immediate
 > GSAC ID: 10
 [Changes to Player 1 detected.]
@@ -228,6 +260,7 @@ Event:     Switch with Teammate #3
 Character: Fasha
 
 [Scene 10]
+(Battle Info)
 Condition: Win via K.O.
 > GSAC ID: 30
 Condition: Win via K.O. (Opponent)
@@ -235,6 +268,7 @@ Condition: Win via K.O. (Opponent)
 Event:     Battle Finish
 
 [Scene 11]
+(Battle Info)
 Condition: Immediate
 > GSAC ID: 12
 [Changes to Player 1 detected.]
@@ -243,7 +277,9 @@ Event:     Switch with Teammate #2
 Character: Bardock
 
 [Scene 12]
+Lower Current BG Music
 BG Music:  Dynamite Battle
+(Battle Info)
 Condition: Win via K.O.
 > GSAC ID: 13
 Condition: Win via K.O. (Opponent)
@@ -262,6 +298,7 @@ Condition: Win via K.O. (Opponent)
 Event:     Aerial Clash
 
 [Scene 13]
+(Battle Info)
 Condition: Immediate
 > GSAC ID: 14
 [Changes to Opponent detected.]
@@ -270,6 +307,7 @@ Event:     Switch with Teammate #4 (Opponent) [AUTO]
 Character: Frieza - 1st Form
 
 [Scene 14]
+(Battle Info)
 Condition: Wait 15 seconds
 > GSAC ID: 16
 Condition: Win via K.O.
@@ -279,6 +317,7 @@ Condition: Win via K.O. (Opponent)
 Event:     Battle Finish
 
 [Scene 16]
+(Battle Info)
 Condition: Immediate
 > GSAC ID: 17
 [Changes to Player 1 detected.]
@@ -287,6 +326,7 @@ Event:     Switch with Teammate #4
 Character: King Vegeta 
 
 [Scene 17]
+(Battle Info)
 Condition: Win via K.O. (Opponent)
 > GSAC ID: 18
 Condition: Win via K.O.
@@ -294,6 +334,7 @@ Condition: Win via K.O.
 Event:     Battle Finish
 
 [Scene 18]
+(Battle Info)
 Condition: Immediate
 > GSAC ID: 19
 [Changes to Player 1 detected.]
@@ -304,6 +345,7 @@ Event:     Switch with Teammate #1
 Character: Vegeta (Scouter)
 
 [Scene 19]
+(Battle Info)
 Condition: Win via K.O.
 > GSAC ID: 37
 Condition: Win via K.O. (Opponent)
@@ -311,6 +353,7 @@ Condition: Win via K.O. (Opponent)
 Event:     Battle Finish
 
 [Scene 20]
+(Battle Info)
 Condition: Immediate
 > GSAC ID: 21
 [Changes to Player 1 detected.]
@@ -321,6 +364,7 @@ Event:     Switch with Teammate #2
 Character: Bardock
 
 [Scene 21]
+(Battle Info)
 Condition: Win via K.O.
 > GSAC ID: 33
 Condition: Win via K.O. (Opponent)
@@ -339,42 +383,61 @@ Condition: Win via K.O. (Opponent)
 Event:     Normal Clash
 
 [Scene 30 (Victory)]
+(No Battle Info)
 
 [Scene 31 (Victory)]
+(No Battle Info)
 
 [Scene 32 (Victory) - UNUSED]
+(No Battle Info)
 
 [Scene 33 (Victory)]
+(No Battle Info)
 
 [Scene 34 (Victory)]
+(No Battle Info)
 
 [Scene 35 (Victory)]
+(No Battle Info)
 
 [Scene 36 (Victory)]
+(No Battle Info)
 
 [Scene 37 (Victory)]
+(No Battle Info)
 
 [Scene 38 (Victory)]
+(No Battle Info)
 
 [Scene 40 (Defeat)]
+(No Battle Info)
 
 [Scene 41 (Defeat)]
+(No Battle Info)
 
 [Scene 42 (Defeat)]
+(No Battle Info)
 
 [Scene 43 (Defeat)]
+(No Battle Info)
 
 [Scene 44 (Defeat)]
+(No Battle Info)
 
 [Scene 45 (Defeat)]
+(No Battle Info)
 
 [Scene 46 (Defeat) - UNUSED]
+(No Battle Info)
 
 [Scene 47 (Defeat)]
+(No Battle Info)
 
 [Scene 48 (Defeat)]
+(No Battle Info)
 
 [Scene 4 - UNUSED]
+(Battle Info)
 Condition: Immediate
 > GSAC ID: 5
 [Changes to Player 1 detected.]
@@ -383,6 +446,7 @@ Event:     Switch with Teammate #3
 Character: Fasha
 
 [Scene 15 - UNUSED]
+(Battle Info)
 Condition: Wait 25 seconds
 > GSAC ID: 16
 Condition: Win via K.O. (Opponent)
