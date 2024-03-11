@@ -20,7 +20,8 @@ To ensure the program works, it comes with a folder containing vanilla copies of
 
 ## Usage/Preview
 ![preview1](https://github.com/ViveTheModder/swag-studio/blob/main/img/demo.png)
-And just for fun, [here](https://github.com/ViveTheModder/swag-studio/blob/main/out/GSC-B-46 (Simple).log) is the output of the program if GSC-B-46.gsc (Galaxy Battle, the game's longest scenario) is given.
+
+And just for fun, [here](https://github.com/ViveTheModder/swag-studio/blob/main/out/GSC-B-46%20(Simple).log) is the output of the program if GSC-B-46.gsc (Galaxy Battle, the game's longest scenario) is given.
 
 In case the text file was hard to follow, here is a visualization of the scenario's structure.
 ![preview2](https://github.com/ViveTheModder/swag-studio/blob/main/img/visualization.png)
