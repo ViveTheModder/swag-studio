@@ -155,7 +155,8 @@ Teammate Count (Player 1): 4
 Teammate Count (Opponent): 4
 
 [Scene 0]
-(Cinematic Info)
+
+===Cinematic Info===
 Change Position/Rotation for Vegeta (Scouter)
 > Position (XYZ): -60.0 0.0 -50.0 
 > Rotation (XYZ): 0.0 50.2 0.0 
@@ -169,9 +170,9 @@ Change Position/Rotation for Cui
 > Transition Time: 7.0 
 > Position (XYZ): -50.906 -6.258 -40.187 
 > Rotation (XYZ): 16.358 -136.559 0.0 
-Play Animation 384 for Vegeta (Scouter)
+Play Animation 384_INTRO_IN.canm for Vegeta (Scouter)
 > Wait property detected
-Play Animation 385 for Vegeta (Scouter)
+Play Animation 385_INTRO_LOOP.canm for Vegeta (Scouter)
 > Loop property detected
 Play Voice Line 0 for Vegeta (Scouter)
 > Wait property detected
@@ -182,22 +183,53 @@ Play Voice Line 0 for Vegeta (Scouter)
 > Transition Time: 5.5 
 > Position (XYZ): 59.531 -7.192 44.048 
 > Rotation (XYZ): 16.562 67.596 0.0 
-Play Animation 0 for Cui
+Play Animation 0_GROUND.canm for Cui
 > Loop property detected
 Play Voice Line 1 for Cui
 > Wait property detected
 Disable ALL VFX
-(Battle Info)
+
+===Battle Info===
 Condition: Win via K.O.
 > GSAC ID: 1
 Condition: Win via K.O. (Opponent)
 > GSAC ID: 40
+Condition: Immediate
+> Voice Line ID: 2
+Condition: Immediate
+> Voice Line ID: 3
+Condition: Immediate
+> Voice Line ID: 4
+Condition: Wait 30 seconds
+> Voice Line ID: 12
+Condition: Lose 1 Health Bar (Opponent) [AUTO]
+> Voice Line ID: 5
+Condition: Go in MAX POWER Mode
+> Voice Line ID: 9
+Condition: Fall into ground/water (Opponent) [AUTO]
+> Voice Line ID: 6
+Condition: Perform Teleport
+> Voice Line ID: 7
+Condition: Perform Z-Counter
+> Voice Line ID: 7
+Condition: Hit with 1st Blast 2
+> Voice Line ID: 8
+Condition: Hit with 2nd Blast 2
+> Voice Line ID: 8
+Condition: Perform Dash Smash
+> Voice Line ID: 10
+Condition: Perform Dash Smash (Opponent)
+> Voice Line ID: 199
+Condition: Hit with Charged Ki Blast (Opponent)
+> Voice Line ID: 199
 Event:     Battle Finish
 
 [Scene 1]
-(Cinematic Info)
+
+===Cinematic Info===
 Disable ALL VFX
-(Battle Info)
+
+===Battle Info===
 Condition: Immediate
 > GSAC ID: 2
 [Changes to Opponent detected.]
@@ -206,7 +238,8 @@ Event:     Switch with Teammate #2 (Opponent) [AUTO]
 Character: Dodoria
 
 [Scene 2]
-(Cinematic Info)
+
+===Cinematic Info===
 Add 1.2 s fade-out
 Change Position/Rotation for Vegeta (Scouter)
 > Position (XYZ): -35.5 0.0 -31.2 
@@ -214,7 +247,7 @@ Change Position/Rotation for Vegeta (Scouter)
 Change Position/Rotation for Dodoria
 > Position (XYZ): 45.5 0.0 31.2 
 > Rotation (XYZ): 0.0 -125.5 0.0 
-Play Animation 0 for Vegeta (Scouter)
+Play Animation 0_GROUND.canm for Vegeta (Scouter)
 > Loop property detected
 [Initial Camera Point]
 > Position (XYZ): 25.572 -2.428 16.071 
@@ -223,9 +256,9 @@ Play Animation 0 for Vegeta (Scouter)
 > Transition Time: 7.5 
 > Position (XYZ): 32.211 -5.496 23.71 
 > Rotation (XYZ): 38.479 58.634 0.0 
-Play Animation 384 for Dodoria
+Play Animation 384_INTRO_IN.canm for Dodoria
 > Wait property detected
-Play Animation 385 for Dodoria
+Play Animation 385_INTRO_LOOP.canm for Dodoria
 > Loop property detected
 Play Voice Line 19 for Dodoria
 > Wait property detected
@@ -239,15 +272,59 @@ Play Voice Line 19 for Dodoria
 Play Voice Line 20 for Vegeta (Scouter)
 > Wait property detected
 Disable ALL VFX
-(Battle Info)
+
+===Battle Info===
 Condition: Win via K.O.
 > GSAC ID: 3
 Condition: Win via K.O. (Opponent)
 > GSAC ID: 41
+Condition: Immediate
+> Voice Line ID: 21
+Condition: Immediate
+> Voice Line ID: 22
+Condition: Immediate
+> Voice Line ID: 16
+Condition: Immediate
+> Voice Line ID: 17
+Condition: Immediate
+> Voice Line ID: 18
+Condition: Lose 1 Health Bar
+> Voice Line ID: 24
+Condition: Perform Dash Smash
+> Voice Line ID: 25
+Condition: Perform Vanishing Attack (Opponent)
+> Voice Line ID: 23
+Condition: Fall into ground/water (Opponent) [AUTO]
+> Voice Line ID: 26
+Condition: Go in MAX POWER Mode (Opponent)
+> Voice Line ID: 27
+Condition: UNKNOWN(ID: 53)
+> Voice Line ID: 28
+Condition: Perform Throw
+> Voice Line ID: 28
+Condition: Perform Throw (Opponent)
+> Voice Line ID: 29
+Condition: Hit with 1st Blast 2
+> Voice Line ID: 30
+Condition: Hit with 2nd Blast 2
+> Voice Line ID: 30
+Condition: UNKNOWN(ID: 53) (Opponent)
+> Voice Line ID: 29
+Condition: Lose 2 Health Bars
+> Voice Line ID: 31
+Condition: Perform Teleport
+> Voice Line ID: 32
+Condition: Perform Z-Counter
+> Voice Line ID: 32
+Condition: Lose 2 Health Bars (Opponent) [AUTO]
+> Voice Line ID: 33
+Condition: Perform Vanishing Attack
+> Voice Line ID: 25
 Event:     Battle Finish
 
 [Scene 3]
-(Cinematic Info)
+
+===Cinematic Info===
 Add 1.2 s fade-out
 Change Position/Rotation for Vegeta (Scouter)
 > Position (XYZ): -20.4 0.0 -19.5 
@@ -259,48 +336,97 @@ Disable Aura Charge for Dodoria
 [Initial Camera Point]
 > Position (XYZ): -2.881 -3.162 1.087 
 > Rotation (XYZ): 4.898 68.199 0.0 
-Play Animation 388 for Dodoria
+Play Animation 388_LOSE.canm for Dodoria
 > Wait property detected
 [Initial Camera Point]
 > Position (XYZ): -16.231 -12.295 -10.471 
 > Rotation (XYZ): -11.009 -161.16 0.0 
-Play Animation 386 for Vegeta (Scouter)
+Play Animation 386_WIN_IN.canm for Vegeta (Scouter)
 Play Voice Line 35 for Vegeta (Scouter)
 > Wait property detected
-Play Animation 387 for Vegeta (Scouter)
+Play Animation 387_WIN_LOOP.canm for Vegeta (Scouter)
 > Loop property detected
 Disable ALL VFX
-(Battle Info)
+
+===Battle Info===
 Condition: Wait 10 seconds
 > GSAC ID: 5
 Condition: Win via K.O.
 > GSAC ID: 38
 Condition: Win via K.O. (Opponent)
 > GSAC ID: 48
+Condition: Immediate
+> Voice Line ID: 41
+Condition: Perform 1st Blast 2 (Opponent)
+> Voice Line ID: 30
+Condition: Perform 2nd Blast 2 (Opponent)
+> Voice Line ID: 30
+Condition: Lose 2 Health Bars
+> Voice Line ID: 31
+Condition: Perform Teleport
+> Voice Line ID: 32
+Condition: Perform Z-Counter
+> Voice Line ID: 32
+Condition: Lose 2 Health Bars (Opponent) [AUTO]
+> Voice Line ID: 33
 [Changes to Opponent detected.]
 > Apply changes to Teammate 3
 Event:     Switch with Teammate #3 (Opponent) [AUTO]
 Character: Zarbon
 
 [Scene 5]
-(Cinematic Info)
+
+===Cinematic Info===
 Disable ALL VFX
-(Battle Info)
+
+===Battle Info===
 Condition: Wait 30 seconds
 > GSAC ID: 6
 Condition: Win via K.O. (Opponent)
 > GSAC ID: 42
 Condition: Win via K.O.
 > GSAC ID: 34
+Condition: Immediate
+> Voice Line ID: 42
+Condition: Immediate
+> Voice Line ID: 43
+Condition: Immediate
+> Voice Line ID: 45
+Condition: Fall into ground/water [AUTO]
+> Voice Line ID: 46
+Condition: Perform 1st Blast 2
+> Voice Line ID: 47
+Condition: Perform 2nd Blast 2
+> Voice Line ID: 49
+Condition: Perform Vanishing Attack
+> Voice Line ID: 48
+Condition: Lose 1 Health Bar
+> Voice Line ID: 50
+Condition: Go in MAX POWER Mode
+> Voice Line ID: 51
+Condition: Go in MAX POWER Mode (Opponent)
+> Voice Line ID: 52
+Condition: Perform Dash Smash (Opponent)
+> Voice Line ID: 53
+Condition: Perform Vanishing Attack (Opponent)
+> Voice Line ID: 53
+Condition: Lose 1 Health Bar (Opponent) [AUTO]
+> Voice Line ID: 54
+Condition: Hit with 1st Blast 2 (Opponent)
+> Voice Line ID: 55
+Condition: Hit with 2nd Blast 2 (Opponent)
+> Voice Line ID: 55
 [Changes to Player 1 detected.]
 > Apply changes to Teammate 3
 Event:     Switch with Teammate #3
 Character: Fasha
 
 [Scene 6]
-(Cinematic Info)
+
+===Cinematic Info===
 Disable ALL VFX
-(Battle Info)
+
+===Battle Info===
 Condition: Immediate
 > GSAC ID: 7
 [Changes to Player 1 detected.]
@@ -309,7 +435,8 @@ Event:     Switch with Teammate #2
 Character: Bardock
 
 [Scene 7]
-(Cinematic Info)
+
+===Cinematic Info===
 Add 1.2 s fade-out
 Change Position/Rotation for Bardock
 > Position (XYZ): -20.0 0.0 50.0 
@@ -317,9 +444,9 @@ Change Position/Rotation for Bardock
 Change Position/Rotation for Zarbon
 > Position (XYZ): 20.0 0.0 -50.0 
 > Rotation (XYZ): 0.0 -21.8 0.0 
-Play Animation 385 for Bardock
+Play Animation 385_INTRO_LOOP.canm for Bardock
 > Loop property detected
-Play Animation 0 for Zarbon
+Play Animation 0_GROUND.canm for Zarbon
 > Loop property detected
 [Initial Camera Point]
 > Position (XYZ): -26.334 -9.045 31.11 
@@ -357,14 +484,15 @@ Play Voice Line 61 for Zarbon
 > Transition Time: 6.0 
 > Position (XYZ): -18.997 -9.042 41.721 
 > Rotation (XYZ): 36.252 -5.85 0.0 
-Play Animation 384 for Bardock
+Play Animation 384_INTRO_IN.canm for Bardock
 > Wait property detected
-Play Animation 385 for Bardock
+Play Animation 385_INTRO_LOOP.canm for Bardock
 > Loop property detected
 Play Voice Line 62 for Bardock
 > Wait property detected
 Disable ALL VFX
-(Battle Info)
+
+===Battle Info===
 Condition: Wait 30 seconds
 > GSAC ID: 8
 Condition: Lose 3 Health Bars (Opponent) [AUTO]
@@ -373,6 +501,38 @@ Condition: Win via K.O. (Opponent)
 > GSAC ID: 42
 Condition: Win via K.O.
 > GSAC ID: 35
+Condition: Immediate
+> Voice Line ID: 63
+Condition: Immediate
+> Voice Line ID: 64
+Condition: Immediate
+> Voice Line ID: 65
+Condition: Hit with 1st Blast 2
+> Voice Line ID: 66
+Condition: Hit with 2nd Blast 2
+> Voice Line ID: 66
+Condition: Lose 1 Health Bar
+> Voice Line ID: 53
+Condition: Go in MAX POWER Mode (Opponent)
+> Voice Line ID: 72
+Condition: Fall into ground/water (Opponent) [AUTO]
+> Voice Line ID: 70
+Condition: Lose 2 Health Bars
+> Voice Line ID: 71
+Condition: Perform Z-Counter (Opponent)
+> Voice Line ID: 69
+Condition: Perform Teleport (Opponent)
+> Voice Line ID: 69
+Condition: Fall into ground/water [AUTO]
+> Voice Line ID: 73
+Condition: Perform Dash Smash (Opponent)
+> Voice Line ID: 74
+Condition: Perform Dragon Homing (Opponent)
+> Voice Line ID: 75
+Condition: Perform Vanishing Attack (Opponent)
+> Voice Line ID: 75
+Condition: Go in MAX POWER Mode
+> Voice Line ID: 76
 [Changes to Opponent detected.]
 > Z-Item #2: Defense +15
 > Z-Item #3: null
@@ -381,7 +541,8 @@ Condition: Win via K.O.
 Event:     Battle Finish
 
 [Scene 8]
-(Cinematic Info)
+
+===Cinematic Info===
 Add 1.2 s fade-out
 Change Position/Rotation for Bardock
 > Position (XYZ): -20.0 0.0 50.0 
@@ -390,9 +551,9 @@ Change Position/Rotation for Zarbon
 > Position (XYZ): 20.0 0.0 -50.0 
 > Rotation (XYZ): 0.0 -21.8 0.0 
 Disable Aura Charge for Zarbon
-Play Animation 0 for Bardock
+Play Animation 0_GROUND.canm for Bardock
 > Loop property detected
-Play Animation 1 for Zarbon
+Play Animation 1_GROUND_TIRED.canm for Zarbon
 > Loop property detected
 Disable Aura Charge for Zarbon
 [Initial Camera Point]
@@ -420,23 +581,36 @@ Play Voice Line 78 for Bardock
 > Transition Time: 5.0 
 > Position (XYZ): 10.164 -4.342 -31.343 
 > Rotation (XYZ): 12.739 149.895 0.0 
-Play Animation 52 for Zarbon
+Play Animation 52_CHARGE_IN.canm for Zarbon
 > Wait property detected
 Enable MPM Explosion for Zarbon
-Play Animation 53 for Zarbon
+Play Animation 53_CHARGE_LOOP.canm for Zarbon
 > Loop property detected
 Play Voice Line 79 for Zarbon
 > Wait property detected
 Lower Current BG Music
 BG Music:  Caution!
 Disable ALL VFX
-(Battle Info)
+
+===Battle Info===
 Condition: Wait 10 seconds
 > GSAC ID: 9
 Condition: Win via K.O. (Opponent)
 > GSAC ID: 43
 Condition: Win via K.O.
 > GSAC ID: 35
+Condition: Immediate
+> Voice Line ID: 81
+Condition: Immediate
+> Voice Line ID: 82
+Condition: Perform Dash Smash (Opponent)
+> Voice Line ID: 74
+Condition: Perform Dragon Homing (Opponent)
+> Voice Line ID: 75
+Condition: Perform Vanishing Attack (Opponent)
+> Voice Line ID: 75
+Condition: Go in MAX POWER Mode
+> Voice Line ID: 76
 [Changes to Opponent detected.]
 > Add 100% more Health
 > Z-Item #2: Defense +35
@@ -447,9 +621,11 @@ Event:     Assign Transformation (Opponent) [AUTO]
 Character: Zarbon - Post-Transformation
 
 [Scene 9]
-(Cinematic Info)
+
+===Cinematic Info===
 Disable ALL VFX
-(Battle Info)
+
+===Battle Info===
 Condition: Immediate
 > GSAC ID: 10
 [Changes to Player 1 detected.]
@@ -458,7 +634,8 @@ Event:     Switch with Teammate #3
 Character: Fasha
 
 [Scene 10]
-(Cinematic Info)
+
+===Cinematic Info===
 Add 1.2 s fade-out
 Change Position/Rotation for Fasha
 > Position (XYZ): -12.6 0.0 31.4 
@@ -467,9 +644,9 @@ Change Position/Rotation for Zarbon
 > Position (XYZ): 12.6 0.0 -31.4 
 > Rotation (XYZ): 0.0 -21.8 0.0 
 Disable Aura Charge for Fasha
-Play Animation 0 for Fasha
+Play Animation 0_GROUND.canm for Fasha
 > Loop property detected
-Play Animation 0 for Zarbon
+Play Animation 0_GROUND.canm for Zarbon
 > Loop property detected
 [Initial Camera Point]
 > Position (XYZ): -9.519 -7.676 -7.71 
@@ -487,24 +664,62 @@ Play Voice Line 86 for Fasha
 > Transition Time: 5.0 
 > Position (XYZ): 7.548 -13.162 -19.45 
 > Rotation (XYZ): 9.142 159.214 0.0 
-Play Animation 384 for Zarbon
+Play Animation 384_INTRO_IN.canm for Zarbon
 > Wait property detected
 Enable MPM Explosion for Zarbon
 Enable Ki Charge for Zarbon
-Play Animation 385 for Zarbon
+Play Animation 385_INTRO_LOOP.canm for Zarbon
 > Loop property detected
 Play Voice Line 89 for Zarbon
 > Wait property detected
 Disable ALL VFX
-(Battle Info)
+
+===Battle Info===
 Condition: Win via K.O.
 > GSAC ID: 30
 Condition: Win via K.O. (Opponent)
 > GSAC ID: 11
+Condition: Immediate
+> Voice Line ID: 87
+Condition: Immediate
+> Voice Line ID: 88
+Condition: Perform 1st Blast 2 (Opponent)
+> Voice Line ID: 90
+Condition: Perform Dragon Homing
+> Voice Line ID: 91
+Condition: Perform Vanishing Attack
+> Voice Line ID: 91
+Condition: Lose 2 Health Bars
+> Voice Line ID: 92
+Condition: Lose 3 Health Bars (Opponent) [AUTO]
+> Voice Line ID: 93
+Condition: Go in MAX POWER Mode (Opponent)
+> Voice Line ID: 84
+Condition: Perform Teleport (Opponent)
+> Voice Line ID: 96
+Condition: Perform Z-Counter (Opponent)
+> Voice Line ID: 96
+Condition: Perform 2nd Blast 2 (Opponent)
+> Voice Line ID: 90
+Condition: Fall into ground/water [AUTO]
+> Voice Line ID: 94
+Condition: Perform Vanishing Attack (Opponent)
+> Voice Line ID: 85
+Condition: Hit with 1st Blast 2
+> Voice Line ID: 97
+Condition: Hit with 2nd Blast 2
+> Voice Line ID: 97
+Condition: Perform Throw (Opponent)
+> Voice Line ID: 85
+Condition: Hit with Ultimate Blast (Opponent)
+> Voice Line ID: 98
+Condition: Perform Dash Smash (Opponent)
+> Voice Line ID: 99
 Event:     Battle Finish
 
 [Scene 11]
-(Cinematic Info)
+
+===Cinematic Info===
 Add 1.2 s fade-out
 Change Position/Rotation for Fasha
 > Position (XYZ): -12.6 0.0 31.4 
@@ -513,9 +728,9 @@ Change Position/Rotation for Zarbon
 > Position (XYZ): 12.6 0.0 -31.4 
 > Rotation (XYZ): 0.0 -21.8 0.0 
 Disable Aura Charge for Fasha
-Play Animation 0 for Zarbon
+Play Animation 0_GROUND.canm for Zarbon
 > Loop property detected
-Play Animation 1 for Fasha
+Play Animation 1_GROUND_TIRED.canm for Fasha
 > Loop property detected
 [Initial Camera Point]
 > Position (XYZ): -39.415 -40.463 38.597 
@@ -544,12 +759,13 @@ Play Voice Line 102 for Fasha
 > Transition Time: 7.0 
 > Position (XYZ): -9.442 -45.454 -3.968 
 > Rotation (XYZ): -67.798 10.599 0.0 
-Play Animation 388 for Fasha
+Play Animation 388_LOSE.canm for Fasha
 > Wait property detected
 Play Voice Line 103 for Bardock
 > Wait property detected
 Disable ALL VFX
-(Battle Info)
+
+===Battle Info===
 Condition: Immediate
 > GSAC ID: 12
 [Changes to Player 1 detected.]
@@ -558,7 +774,8 @@ Event:     Switch with Teammate #2
 Character: Bardock
 
 [Scene 12]
-(Cinematic Info)
+
+===Cinematic Info===
 Add 1.2 s fade-out
 Change Position/Rotation for Bardock
 > Position (XYZ): -20.0 0.0 50.0 
@@ -566,9 +783,9 @@ Change Position/Rotation for Bardock
 Change Position/Rotation for Zarbon
 > Position (XYZ): 20.0 0.0 -50.0 
 > Rotation (XYZ): 0.0 -21.8 0.0 
-Play Animation 0 for Zarbon
+Play Animation 0_GROUND.canm for Zarbon
 > Loop property detected
-Play Animation 0 for Bardock
+Play Animation 0_GROUND.canm for Bardock
 > Loop property detected
 [Initial Camera Point]
 > Position (XYZ): 11.788 -0.42 -37.473 
@@ -595,11 +812,11 @@ Play Voice Line 115 for Zarbon
 > Transition Time: 3.0 
 > Position (XYZ): -20.578 -2.725 31.36 
 > Rotation (XYZ): 14.391 3.787 0.0 
-Play Animation 52 for Bardock
+Play Animation 52_CHARGE_IN.canm for Bardock
 > Wait property detected
 Enable Ki Charge for Bardock
 Shake Camera for 1.2 seconds
-Play Animation 53 for Bardock
+Play Animation 53_CHARGE_LOOP.canm for Bardock
 > Loop property detected
 Play Voice Line 116 for Bardock
 > Wait property detected
@@ -607,17 +824,50 @@ Play Voice Line 116 for Bardock
 > Position (XYZ): -33.696 -12.615 59.702 
 > Rotation (XYZ): -15.547 141.452 0.0 
 Enable MPM Explosion for Bardock
-Play Animation 54 for Bardock
+Play Animation 54_CHARGE_MAX.canm for Bardock
 > Wait property detected
 Lower Current BG Music
 BG Music:  Dynamite Battle
 Wait 0.8 seconds
 Disable ALL VFX
-(Battle Info)
+
+===Battle Info===
 Condition: Win via K.O.
 > GSAC ID: 13
 Condition: Win via K.O. (Opponent)
 > GSAC ID: 44
+Condition: Immediate
+> Voice Line ID: 118
+Condition: Immediate
+> Voice Line ID: 119
+Condition: Immediate
+> Voice Line ID: 120
+Condition: Immediate
+> Voice Line ID: 121
+Condition: Go in MAX POWER Mode
+> Voice Line ID: 185
+Condition: Fall into ground/water [AUTO]
+> Voice Line ID: 186
+Condition: Hit with 1st Blast 2
+> Voice Line ID: 187
+Condition: Hit with 2nd Blast 2
+> Voice Line ID: 187
+Condition: Perform Vanishing Attack
+> Voice Line ID: 188
+Condition: Go in MAX POWER Mode (Opponent)
+> Voice Line ID: 189
+Condition: Perform Teleport (Opponent)
+> Voice Line ID: 190
+Condition: Perform Z-Counter
+> Voice Line ID: 190
+Condition: Fall into ground/water (Opponent) [AUTO]
+> Voice Line ID: 191
+Condition: Hit with 1st Blast 2 (Opponent)
+> Voice Line ID: 85
+Condition: Hit with 2nd Blast 2 (Opponent)
+> Voice Line ID: 85
+Condition: Hit with Charged Ki Blast
+> Voice Line ID: 188
 [Changes to Player 1 detected.]
 > Add 100% more Health
 > Z-Item #4: Attack +5
@@ -632,7 +882,8 @@ Condition: Win via K.O. (Opponent)
 Event:     Aerial Clash
 
 [Scene 13]
-(Cinematic Info)
+
+===Cinematic Info===
 Add 1.2 s fade-out
 Change Position/Rotation for Bardock
 > Position (XYZ): -12.6 0.0 31.4 
@@ -644,9 +895,9 @@ Disable Aura Charge for Bardock
 [Initial Camera Point]
 > Position (XYZ): -23.916 -31.405 53.564 
 > Rotation (XYZ): -33.527 158.261 0.0 
-Play Animation 1 for Bardock
+Play Animation 1_GROUND_TIRED.canm for Bardock
 > Loop property detected
-Play Animation 388 for Zarbon
+Play Animation 388_LOSE.canm for Zarbon
 Play Voice Line 192 for Bardock
 > Wait property detected
 [Initial Camera Point]
@@ -673,7 +924,8 @@ Play Voice Line 194 for Bardock
 Play Voice Line 195 for Bardock
 > Wait property detected
 Disable ALL VFX
-(Battle Info)
+
+===Battle Info===
 Condition: Immediate
 > GSAC ID: 14
 [Changes to Opponent detected.]
@@ -682,7 +934,8 @@ Event:     Switch with Teammate #4 (Opponent) [AUTO]
 Character: Frieza - 1st Form
 
 [Scene 14]
-(Cinematic Info)
+
+===Cinematic Info===
 Add 1.2 s fade-out
 Change Position/Rotation for Bardock
 > Position (XYZ): -20.0 0.0 50.0 
@@ -690,9 +943,9 @@ Change Position/Rotation for Bardock
 Change Position/Rotation for Frieza - 1st Form
 > Position (XYZ): 20.0 0.0 -50.0 
 > Rotation (XYZ): 0.0 -21.8 0.0 
-Play Animation 0 for Frieza - 1st Form
+Play Animation 0_GROUND.canm for Frieza - 1st Form
 > Loop property detected
-Play Animation 0 for Bardock
+Play Animation 0_GROUND.canm for Bardock
 > Loop property detected
 [Initial Camera Point]
 > Position (XYZ): 7.564 -7.395 -22.789 
@@ -706,22 +959,37 @@ Play Voice Line 122 for Frieza - 1st Form
 [Initial Camera Point]
 > Position (XYZ): 11.994 -9.198 -50.029 
 > Rotation (XYZ): 4.601 82.25 0.0 
-Play Voice Line123 for Background Character
+Play Voice Line 123 for Background Character
 > Wait property detected
 Disable ALL VFX
-(Battle Info)
+
+===Battle Info===
 Condition: Wait 15 seconds
 > GSAC ID: 16
 Condition: Win via K.O.
 > GSAC ID: 33
 Condition: Win via K.O. (Opponent)
 > GSAC ID: 47
+Condition: Immediate
+> Voice Line ID: 126
+Condition: Immediate
+> Voice Line ID: 127
+Condition: Immediate
+> Voice Line ID: 128
+Condition: Hit with Charged Ki Blast
+> Voice Line ID: 187
+Condition: Perform Throw (Opponent)
+> Voice Line ID: 136
+Condition: Perform Vanishing Attack (Opponent)
+> Voice Line ID: 186
 Event:     Battle Finish
 
 [Scene 16]
-(Cinematic Info)
+
+===Cinematic Info===
 Disable ALL VFX
-(Battle Info)
+
+===Battle Info===
 Condition: Immediate
 > GSAC ID: 17
 [Changes to Player 1 detected.]
@@ -730,7 +998,8 @@ Event:     Switch with Teammate #4
 Character: King Vegeta 
 
 [Scene 17]
-(Cinematic Info)
+
+===Cinematic Info===
 Add 1.2 s fade-out
 Change Position/Rotation for King Vegeta 
 > Position (XYZ): -20.0 0.0 50.0 
@@ -745,9 +1014,9 @@ Change Position/Rotation for Frieza - 1st Form
 > Transition Time: 4.0 
 > Position (XYZ): -14.258 -12.656 35.909 
 > Rotation (XYZ): -2.197 -24.964 0.0 
-Play Animation 386 for King Vegeta 
+Play Animation 386_WIN_IN.canm for King Vegeta 
 > Wait property detected
-Play Animation 387 for King Vegeta 
+Play Animation 387_WIN_LOOP.canm for King Vegeta 
 > Loop property detected
 Play Voice Line 141 for King Vegeta 
 > Wait property detected
@@ -776,11 +1045,11 @@ Play Voice Line 143 for Frieza - 1st Form
 > Transition Time: 5.0 
 > Position (XYZ): 14.166 -3.938 -40.536 
 > Rotation (XYZ): 1.24 148.319 0.0 
-Play Animation 52 for Frieza - 1st Form
+Play Animation 52_CHARGE_IN.canm for Frieza - 1st Form
 > Wait property detected
 Enable Ki Charge for Frieza - 1st Form
 Shake Camera for 1.0 seconds
-Play Animation 53 for Frieza - 1st Form
+Play Animation 53_CHARGE_LOOP.canm for Frieza - 1st Form
 > Loop property detected
 Play Voice Line 144 for Frieza - 1st Form
 > Wait property detected
@@ -792,21 +1061,56 @@ Play Voice Line 144 for Frieza - 1st Form
 > Position (XYZ): -9.455 -2.965 -2.262 
 > Rotation (XYZ): 1.24 148.319 0.0 
 Enable MPM Explosion for Frieza - 1st Form
-Play Animation 54 for Frieza - 1st Form
+Play Animation 54_CHARGE_MAX.canm for Frieza - 1st Form
 > Wait property detected
 Wait 0.5 seconds
 Disable ALL VFX
-(Battle Info)
+
+===Battle Info===
 Condition: Win via K.O. (Opponent)
 > GSAC ID: 18
 Condition: Win via K.O.
 > GSAC ID: 36
+Condition: Immediate
+> Voice Line ID: 145
+Condition: Immediate
+> Voice Line ID: 146
+Condition: Perform 1st Blast 2
+> Voice Line ID: 147
+Condition: Perform 2nd Blast 2
+> Voice Line ID: 147
+Condition: Go in MAX POWER Mode
+> Voice Line ID: 147
+Condition: Perform Dragon Homing (Opponent)
+> Voice Line ID: 148
+Condition: Perform Vanishing Attack (Opponent)
+> Voice Line ID: 148
+Condition: Perform Dash Smash (Opponent)
+> Voice Line ID: 149
+Condition: Perform Rush Attack (Opponent)
+> Voice Line ID: 149
+Condition: Go in MAX POWER Mode
+> Voice Line ID: 150
+Condition: Perform Ultimate Blast
+> Voice Line ID: 151
+Condition: Lose 1 Health Bar (Opponent) [AUTO]
+> Voice Line ID: 152
+Condition: Lose 2 Health Bars
+> Voice Line ID: 153
+Condition: Go in MAX POWER Mode (Opponent)
+> Voice Line ID: 139
+Condition: Fall into ground/water (Opponent) [AUTO]
+> Voice Line ID: 156
+Condition: Perform Throw (Opponent)
+> Voice Line ID: 136
 Event:     Battle Finish
 
 [Scene 18]
-(Cinematic Info)
+
+===Cinematic Info===
 Disable ALL VFX
-(Battle Info)
+
+===Battle Info===
 Condition: Immediate
 > GSAC ID: 19
 [Changes to Player 1 detected.]
@@ -817,7 +1121,8 @@ Event:     Switch with Teammate #1
 Character: Vegeta (Scouter)
 
 [Scene 19]
-(Cinematic Info)
+
+===Cinematic Info===
 Add 1.2 s fade-out
 Change Position/Rotation for Vegeta (Scouter)
 > Position (XYZ): -20.0 0.0 50.0 
@@ -825,9 +1130,9 @@ Change Position/Rotation for Vegeta (Scouter)
 Change Position/Rotation for Frieza - 1st Form
 > Position (XYZ): 20.0 0.0 -50.0 
 > Rotation (XYZ): 0.0 -21.8 0.0 
-Play Animation 0 for Frieza - 1st Form
+Play Animation 0_GROUND.canm for Frieza - 1st Form
 > Loop property detected
-Play Animation 413 for Vegeta (Scouter)
+Play Animation 413_STAND_LOOP.canm for Vegeta (Scouter)
 > Loop property detected
 [Initial Camera Point]
 > Position (XYZ): -11.935 -2.529 27.884 
@@ -872,28 +1177,80 @@ Play Voice Line 160 for Frieza - 1st Form
 > Transition Time: 6.2 
 > Position (XYZ): -17.497 -8.916 37.312 
 > Rotation (XYZ): 4.549 -13.161 0.0 
-Play Animation 52 for Vegeta (Scouter)
+Play Animation 52_CHARGE_IN.canm for Vegeta (Scouter)
 > Wait property detected
-Play Animation 53 for Vegeta (Scouter)
+Play Animation 53_CHARGE_LOOP.canm for Vegeta (Scouter)
 > Loop property detected
 > Wait property detected
 Enable Ki Charge for Bardock
 Play Voice Line 161 for Vegeta (Scouter)
 > Wait property detected
 Enable MPM Explosion for Vegeta (Scouter)
-Play Animation 54 for Vegeta (Scouter)
+Play Animation 54_CHARGE_MAX.canm for Vegeta (Scouter)
 > Wait property detected
 Wait 1.0 seconds
 Disable ALL VFX
-(Battle Info)
+
+===Battle Info===
 Condition: Win via K.O.
 > GSAC ID: 37
 Condition: Win via K.O. (Opponent)
 > GSAC ID: 20
+Condition: Immediate
+> Voice Line ID: 162
+Condition: Immediate
+> Voice Line ID: 163
+Condition: Immediate
+> Voice Line ID: 164
+Condition: Immediate
+> Voice Line ID: 165
+Condition: Wait 45 seconds
+> Voice Line ID: 132
+Condition: Wait 50 seconds
+> Voice Line ID: 133
+Condition: Perform Throw
+> Voice Line ID: 166
+Condition: Lose 2 Health Bars (Opponent) [AUTO]
+> Voice Line ID: 167
+Condition: Hit with 1st Blast 2 (Opponent)
+> Voice Line ID: 153
+Condition: Go in MAX POWER Mode (Opponent)
+> Voice Line ID: 139
+Condition: Hit with 1st Blast 2
+> Voice Line ID: 33
+Condition: Hit with 2nd Blast 2 (Opponent)
+> Voice Line ID: 153
+Condition: Perform Fully Charged Right Smash Attack
+> Voice Line ID: 165
+Condition: Perform Vanishing Attack
+> Voice Line ID: 165
+Condition: Hit with 2nd Blast 2
+> Voice Line ID: 33
+Condition: Fall into ground/water (Opponent) [AUTO]
+> Voice Line ID: 156
+Condition: Perform 1st Blast 2
+> Voice Line ID: 30
+Condition: Perform Sonic Sway (Opponent)
+> Voice Line ID: 137
+Condition: Hit with Charged Ki Blast
+> Voice Line ID: 166
+Condition: Perform Throw (Opponent)
+> Voice Line ID: 136
+Condition: Go in MAX POWER Mode
+> Voice Line ID: 164
+Condition: Fall into ground/water [AUTO]
+> Voice Line ID: 31
+Condition: Perform Dragon Homing (Opponent)
+> Voice Line ID: 131
+Condition: Perform Ultimate Blast (Opponent)
+> Voice Line ID: 30
+Condition: Perform Fully Charged Up Smash Attack
+> Voice Line ID: 165
 Event:     Battle Finish
 
 [Scene 20]
-(Cinematic Info)
+
+===Cinematic Info===
 Add 1.2 s fade-out
 Change Position/Rotation for Vegeta (Scouter)
 > Position (XYZ): -8.5 1.0 21.2 
@@ -910,10 +1267,10 @@ Disable Aura Charge for Frieza - 1st Form
 > Transition Time: 5.0 
 > Position (XYZ): -2.426 -26.219 16.79 
 > Rotation (XYZ): -47.514 164.989 0.0 
-Play Animation 1 for Frieza - 1st Form
+Play Animation 1_GROUND_TIRED.canm for Frieza - 1st Form
 > Loop property detected
 Disable Aura Charge for Frieza - 1st Form
-Play Animation 388 for Vegeta (Scouter)
+Play Animation 388_LOSE.canm for Vegeta (Scouter)
 Play Voice Line 167 for Frieza - 1st Form
 > Wait property detected
 [Initial Camera Point]
@@ -926,7 +1283,8 @@ Play Voice Line 167 for Frieza - 1st Form
 Play Voice Line 168 for Frieza - 1st Form
 > Wait property detected
 Disable ALL VFX
-(Battle Info)
+
+===Battle Info===
 Condition: Immediate
 > GSAC ID: 21
 [Changes to Player 1 detected.]
@@ -937,7 +1295,8 @@ Event:     Switch with Teammate #2
 Character: Bardock
 
 [Scene 21]
-(Cinematic Info)
+
+===Cinematic Info===
 Add 1.2 s fade-out
 Change Position/Rotation for Bardock
 > Position (XYZ): -20.0 0.0 50.0 
@@ -945,9 +1304,9 @@ Change Position/Rotation for Bardock
 Change Position/Rotation for Frieza - 1st Form
 > Position (XYZ): 20.0 0.0 -50.0 
 > Rotation (XYZ): 0.0 -21.8 0.0 
-Play Animation 0 for Bardock
+Play Animation 0_GROUND.canm for Bardock
 > Loop property detected
-Play Animation 0 for Frieza - 1st Form
+Play Animation 0_GROUND.canm for Frieza - 1st Form
 > Loop property detected
 [Initial Camera Point]
 > Position (XYZ): -28.095 -1.019 19.385 
@@ -988,20 +1347,63 @@ Play Voice Line 172 for Frieza - 1st Form
 > Transition Time: 3.0 
 > Position (XYZ): -35.199 -8.415 62.712 
 > Rotation (XYZ): -2.603 151.432 0.0 
-Play Animation 52 for Frieza - 1st Form
+Play Animation 52_CHARGE_IN.canm for Frieza - 1st Form
 > Wait property detected
 Enable Ki Charge for Frieza - 1st Form
 Shake Camera for 1.0 seconds
-Play Animation 53 for Frieza - 1st Form
+Play Animation 53_CHARGE_LOOP.canm for Frieza - 1st Form
 > Loop property detected
 Play Voice Line 173 for Frieza - 1st Form
 > Wait property detected
 Disable ALL VFX
-(Battle Info)
+
+===Battle Info===
 Condition: Win via K.O.
 > GSAC ID: 33
 Condition: Win via K.O. (Opponent)
 > GSAC ID: 47
+Condition: Immediate
+> Voice Line ID: 174
+Condition: Immediate
+> Voice Line ID: 175
+Condition: Immediate
+> Voice Line ID: 176
+Condition: Immediate
+> Voice Line ID: 177
+Condition: Go in MAX POWER Mode
+> Voice Line ID: 197
+Condition: Lose 2 Health Bars (Opponent) [AUTO]
+> Voice Line ID: 166
+Condition: Fall into ground/water (Opponent) [AUTO]
+> Voice Line ID: 165
+Condition: Lose 2 Health Bars
+> Voice Line ID: 153
+Condition: Go in MAX POWER Mode (Opponent)
+> Voice Line ID: 139
+Condition: Fall into ground/water (Opponent) [AUTO]
+> Voice Line ID: 156
+Condition: Lose 3 Health Bars
+> Voice Line ID: 154
+Condition: Perform 1st Blast 2
+> Voice Line ID: 185
+Condition: Perform Normal Clash
+> Voice Line ID: 186
+Condition: Hit with Charged Ki Blast
+> Voice Line ID: 187
+Condition: Perform Throw (Opponent)
+> Voice Line ID: 136
+Condition: Lose 3 Health Bars (Opponent) [AUTO]
+> Voice Line ID: 188
+Condition: Perform Aerial Clash
+> Voice Line ID: 186
+Condition: Perform 2nd Blast 2
+> Voice Line ID: 185
+Condition: Perform Ultimate Blast
+> Voice Line ID: 185
+Condition: Hit with Charged Ki Blast (Opponent)
+> Voice Line ID: 135
+Condition: Perform Vanishing Attack (Opponent)
+> Voice Line ID: 135
 [Changes to Player 1 detected.]
 > Add 100% more Health
 [Changes to Opponent detected.]
@@ -1016,7 +1418,8 @@ Condition: Win via K.O. (Opponent)
 Event:     Normal Clash
 
 [Scene 30 (Victory)]
-(Cinematic Info)
+
+===Cinematic Info===
 Change Position/Rotation for Fasha
 > Position (XYZ): -10.7 0.0 26.8 
 > Rotation (XYZ): 0.0 158.2 0.0 
@@ -1032,10 +1435,10 @@ Disable Aura Charge for Zarbon
 > Transition Time: 6.0 
 > Position (XYZ): -8.661 -12.385 17.378 
 > Rotation (XYZ): -1.59 -11.803 0.0 
-Play Animation 388 for Zarbon
-Play Animation 386 for Fasha
+Play Animation 388_LOSE.canm for Zarbon
+Play Animation 386_WIN_IN.canm for Fasha
 > Wait property detected
-Play Animation 387 for Fasha
+Play Animation 387_WIN_LOOP.canm for Fasha
 > Loop property detected
 Play Voice Line 104 for Fasha
 > Wait property detected
@@ -1089,20 +1492,26 @@ Play Voice Line 112 for Bardock
 Play Voice Line 113 for Fasha
 > Wait property detected
 Disable ALL VFX
-(No Battle Info)
+
+===No Battle Info===
 
 [Scene 31 (Victory)]
-(Cinematic Info)
+
+===Cinematic Info===
 Disable ALL VFX
-(No Battle Info)
+
+===No Battle Info===
 
 [Scene 32 (Victory) - UNUSED]
-(Cinematic Info)
+
+===Cinematic Info===
 Disable ALL VFX
-(No Battle Info)
+
+===No Battle Info===
 
 [Scene 33 (Victory)]
-(Cinematic Info)
+
+===Cinematic Info===
 Change Position/Rotation for Bardock
 > Position (XYZ): -10.7 0.0 26.8 
 > Rotation (XYZ): 0.0 158.2 0.0 
@@ -1112,9 +1521,9 @@ Change Position/Rotation for Frieza - 1st Form
 Disable Aura Charge for Bardock
 Disable Aura Charge for Frieza - 1st Form
 Disable Aura Charge for Bardock
-Play Animation 1 for Bardock
+Play Animation 1_GROUND_TIRED.canm for Bardock
 > Loop property detected
-Play Animation 388 for Frieza - 1st Form
+Play Animation 388_LOSE.canm for Frieza - 1st Form
 [Initial Camera Point]
 > Position (XYZ): -3.448 -3.57 -38.313 
 > Rotation (XYZ): -1.088 19.178 0.0 
@@ -1156,10 +1565,12 @@ Play Voice Line 182 for Bardock
 Play Voice Line 183 for Bardock
 > Wait property detected
 Disable ALL VFX
-(No Battle Info)
+
+===No Battle Info===
 
 [Scene 34 (Victory)]
-(Cinematic Info)
+
+===Cinematic Info===
 Change Position/Rotation for Fasha
 > Position (XYZ): -20.4 0.0 -19.5 
 > Rotation (XYZ): 0.0 50.2 0.0 
@@ -1169,21 +1580,23 @@ Change Position/Rotation for Zarbon
 [Initial Camera Point]
 > Position (XYZ): -2.881 -3.162 1.087 
 > Rotation (XYZ): 4.898 68.199 0.0 
-Play Animation 388 for Zarbon
+Play Animation 388_LOSE.canm for Zarbon
 > Wait property detected
 [Initial Camera Point]
 > Position (XYZ): -16.231 -12.295 -10.471 
 > Rotation (XYZ): -11.009 -161.16 0.0 
-Play Animation 386 for Fasha
+Play Animation 386_WIN_IN.canm for Fasha
 Play Voice Line 47 for Fasha
 > Wait property detected
-Play Animation 387 for Fasha
+Play Animation 387_WIN_LOOP.canm for Fasha
 > Loop property detected
 Disable ALL VFX
-(No Battle Info)
+
+===No Battle Info===
 
 [Scene 35 (Victory)]
-(Cinematic Info)
+
+===Cinematic Info===
 Change Position/Rotation for Bardock
 > Position (XYZ): -10.7 0.0 26.8 
 > Rotation (XYZ): 0.0 158.2 0.0 
@@ -1195,23 +1608,25 @@ Disable Aura Charge for Zarbon
 [Initial Camera Point]
 > Position (XYZ): 1.3 -5.841 9.977 
 > Rotation (XYZ): -4.808 175.852 0.0 
-Play Animation 388 for Zarbon
+Play Animation 388_LOSE.canm for Zarbon
 > Wait property detected
 [Initial Camera Point]
 > Position (XYZ): -0.17 -4.394 15.078 
 > Rotation (XYZ): 29.173 -45.144 0.0 
-Play Animation 386 for Bardock
+Play Animation 386_WIN_IN.canm for Bardock
 Play Voice Line 112 for Bardock
 > Wait property detected
-Play Voice Line113 for Background Character
+Play Voice Line 113 for Background Character
 > Wait property detected
-Play Animation 387 for Bardock
+Play Animation 387_WIN_LOOP.canm for Bardock
 > Loop property detected
 Disable ALL VFX
-(No Battle Info)
+
+===No Battle Info===
 
 [Scene 36 (Victory)]
-(Cinematic Info)
+
+===Cinematic Info===
 Change Position/Rotation for King Vegeta 
 > Position (XYZ): -8.9 0.0 22.1 
 > Rotation (XYZ): 0.0 158.2 0.0 
@@ -1223,18 +1638,20 @@ Disable Aura Charge for Frieza - 1st Form
 [Initial Camera Point]
 > Position (XYZ): 1.807 -11.589 -25.875 
 > Rotation (XYZ): -15.355 -0.452 0.0 
-Play Animation 388 for Frieza - 1st Form
-Play Animation 386 for King Vegeta 
+Play Animation 388_LOSE.canm for Frieza - 1st Form
+Play Animation 386_WIN_IN.canm for King Vegeta 
 > Wait property detected
-Play Animation 387 for King Vegeta 
+Play Animation 387_WIN_LOOP.canm for King Vegeta 
 > Loop property detected
 Play Voice Line 147 for King Vegeta 
 > Wait property detected
 Disable ALL VFX
-(No Battle Info)
+
+===No Battle Info===
 
 [Scene 37 (Victory)]
-(Cinematic Info)
+
+===Cinematic Info===
 Change Position/Rotation for Vegeta (Scouter)
 > Position (XYZ): -8.9 0.0 22.1 
 > Rotation (XYZ): 0.0 158.2 0.0 
@@ -1246,18 +1663,20 @@ Disable Aura Charge for Frieza - 1st Form
 [Initial Camera Point]
 > Position (XYZ): 1.807 -11.589 -25.875 
 > Rotation (XYZ): -15.355 -0.452 0.0 
-Play Animation 388 for Frieza - 1st Form
-Play Animation 386 for Vegeta (Scouter)
+Play Animation 388_LOSE.canm for Frieza - 1st Form
+Play Animation 386_WIN_IN.canm for Vegeta (Scouter)
 > Wait property detected
-Play Animation 387 for Vegeta (Scouter)
+Play Animation 387_WIN_LOOP.canm for Vegeta (Scouter)
 > Loop property detected
 Play Voice Line 198 for Vegeta (Scouter)
 > Wait property detected
 Disable ALL VFX
-(No Battle Info)
+
+===No Battle Info===
 
 [Scene 38 (Victory)]
-(Cinematic Info)
+
+===Cinematic Info===
 Change Position/Rotation for Vegeta (Scouter)
 > Position (XYZ): -20.4 0.0 -19.5 
 > Rotation (XYZ): 0.0 50.2 0.0 
@@ -1269,21 +1688,23 @@ Disable Aura Charge for Zarbon
 [Initial Camera Point]
 > Position (XYZ): -2.881 -3.162 1.087 
 > Rotation (XYZ): 4.898 68.199 0.0 
-Play Animation 388 for Zarbon
+Play Animation 388_LOSE.canm for Zarbon
 > Wait property detected
 [Initial Camera Point]
 > Position (XYZ): -16.231 -12.295 -10.471 
 > Rotation (XYZ): -11.009 -161.16 0.0 
-Play Animation 386 for Vegeta (Scouter)
+Play Animation 386_WIN_IN.canm for Vegeta (Scouter)
 Play Voice Line 35 for Vegeta (Scouter)
 > Wait property detected
-Play Animation 387 for Vegeta (Scouter)
+Play Animation 387_WIN_LOOP.canm for Vegeta (Scouter)
 > Loop property detected
 Disable ALL VFX
-(No Battle Info)
+
+===No Battle Info===
 
 [Scene 40 (Defeat)]
-(Cinematic Info)
+
+===Cinematic Info===
 Change Position/Rotation for Vegeta (Scouter)
 > Position (XYZ): -12.6 0.0 31.4 
 > Rotation (XYZ): 0.0 158.2 0.0 
@@ -1299,18 +1720,20 @@ Disable Aura Charge for Cui
 > Transition Time: 7.0 
 > Position (XYZ): 5.937 -11.591 -5.807 
 > Rotation (XYZ): -9.234 163.254 0.0 
-Play Animation 388 for Vegeta (Scouter)
-Play Animation 386 for Cui
+Play Animation 388_LOSE.canm for Vegeta (Scouter)
+Play Animation 386_WIN_IN.canm for Cui
 > Wait property detected
-Play Animation 387 for Cui
+Play Animation 387_WIN_LOOP.canm for Cui
 > Loop property detected
 Play Voice Line 11 for Cui
 > Wait property detected
 Disable ALL VFX
-(No Battle Info)
+
+===No Battle Info===
 
 [Scene 41 (Defeat)]
-(Cinematic Info)
+
+===Cinematic Info===
 Change Position/Rotation for Vegeta (Scouter)
 > Position (XYZ): -12.6 0.0 31.4 
 > Rotation (XYZ): 0.0 158.2 0.0 
@@ -1326,18 +1749,20 @@ Disable Aura Charge for Dodoria
 > Transition Time: 8.0 
 > Position (XYZ): 7.04 -15.478 -17.013 
 > Rotation (XYZ): -0.761 161.135 0.0 
-Play Animation 388 for Vegeta (Scouter)
-Play Animation 386 for Dodoria
+Play Animation 388_LOSE.canm for Vegeta (Scouter)
+Play Animation 386_WIN_IN.canm for Dodoria
 > Wait property detected
-Play Animation 387 for Dodoria
+Play Animation 387_WIN_LOOP.canm for Dodoria
 > Loop property detected
 Play Voice Line 34 for Dodoria
 > Wait property detected
 Disable ALL VFX
-(No Battle Info)
+
+===No Battle Info===
 
 [Scene 42 (Defeat)]
-(Cinematic Info)
+
+===Cinematic Info===
 Change Position/Rotation for Fasha
 > Position (XYZ): -10.7 0.0 26.8 
 > Rotation (XYZ): 0.0 158.2 0.0 
@@ -1353,18 +1778,20 @@ Disable Aura Charge for Zarbon
 > Transition Time: 7.0 
 > Position (XYZ): 5.937 -11.591 -5.807 
 > Rotation (XYZ): -9.234 163.254 0.0 
-Play Animation 388 for Fasha
-Play Animation 386 for Zarbon
+Play Animation 388_LOSE.canm for Fasha
+Play Animation 386_WIN_IN.canm for Zarbon
 > Wait property detected
-Play Animation 387 for Zarbon
+Play Animation 387_WIN_LOOP.canm for Zarbon
 > Loop property detected
 Play Voice Line 56 for Zarbon
 > Wait property detected
 Disable ALL VFX
-(No Battle Info)
+
+===No Battle Info===
 
 [Scene 43 (Defeat)]
-(Cinematic Info)
+
+===Cinematic Info===
 Change Position/Rotation for Bardock
 > Position (XYZ): -10.7 0.0 26.8 
 > Rotation (XYZ): 0.0 158.2 0.0 
@@ -1380,18 +1807,20 @@ Disable Aura Charge for Zarbon
 > Transition Time: 3.0 
 > Position (XYZ): -5.673 -14.819 36.664 
 > Rotation (XYZ): -13.072 169.197 0.0 
-Play Animation 388 for Bardock
-Play Animation 386 for Zarbon
+Play Animation 388_LOSE.canm for Bardock
+Play Animation 386_WIN_IN.canm for Zarbon
 > Wait property detected
-Play Animation 387 for Zarbon
+Play Animation 387_WIN_LOOP.canm for Zarbon
 > Loop property detected
 Play Voice Line 95 for Zarbon
 > Wait property detected
 Disable ALL VFX
-(No Battle Info)
+
+===No Battle Info===
 
 [Scene 44 (Defeat)]
-(Cinematic Info)
+
+===Cinematic Info===
 Change Position/Rotation for Bardock
 > Position (XYZ): -10.7 0.0 26.8 
 > Rotation (XYZ): 0.0 158.2 0.0 
@@ -1407,18 +1836,20 @@ Disable Aura Charge for Zarbon
 > Transition Time: 3.0 
 > Position (XYZ): -5.673 -14.819 36.664 
 > Rotation (XYZ): -13.072 169.197 0.0 
-Play Animation 388 for Bardock
-Play Animation 386 for Zarbon
+Play Animation 388_LOSE.canm for Bardock
+Play Animation 386_WIN_IN.canm for Zarbon
 > Wait property detected
-Play Animation 387 for Zarbon
+Play Animation 387_WIN_LOOP.canm for Zarbon
 > Loop property detected
 Play Voice Line 95 for Zarbon
 > Wait property detected
 Disable ALL VFX
-(No Battle Info)
+
+===No Battle Info===
 
 [Scene 45 (Defeat)]
-(Cinematic Info)
+
+===Cinematic Info===
 Change Position/Rotation for Vegeta (Scouter)
 > Position (XYZ): -20.0 0.0 50.0 
 > Rotation (XYZ): 0.0 158.2 0.0 
@@ -1434,18 +1865,20 @@ Disable Aura Charge for Frieza - 1st Form
 > Transition Time: 8.0 
 > Position (XYZ): 17.176 -9.034 -43.447 
 > Rotation (XYZ): 24.377 156.47 0.0 
-Play Animation 388 for Vegeta (Scouter)
-Play Animation 386 for Frieza - 1st Form
+Play Animation 388_LOSE.canm for Vegeta (Scouter)
+Play Animation 386_WIN_IN.canm for Frieza - 1st Form
 > Wait property detected
-Play Animation 387 for Frieza - 1st Form
+Play Animation 387_WIN_LOOP.canm for Frieza - 1st Form
 > Loop property detected
 Play Voice Line 140 for Frieza - 1st Form
 > Wait property detected
 Disable ALL VFX
-(No Battle Info)
+
+===No Battle Info===
 
 [Scene 46 (Defeat) - UNUSED]
-(Cinematic Info)
+
+===Cinematic Info===
 Change Position/Rotation for King Vegeta 
 > Position (XYZ): -20.0 0.0 50.0 
 > Rotation (XYZ): 0.0 158.2 0.0 
@@ -1461,18 +1894,20 @@ Disable Aura Charge for Frieza - 1st Form
 > Transition Time: 8.0 
 > Position (XYZ): 17.176 -9.034 -43.447 
 > Rotation (XYZ): 24.377 156.47 0.0 
-Play Animation 388 for King Vegeta 
-Play Animation 386 for Frieza - 1st Form
+Play Animation 388_LOSE.canm for King Vegeta 
+Play Animation 386_WIN_IN.canm for Frieza - 1st Form
 > Wait property detected
-Play Animation 387 for Frieza - 1st Form
+Play Animation 387_WIN_LOOP.canm for Frieza - 1st Form
 > Loop property detected
 Play Voice Line 140 for Frieza - 1st Form
 > Wait property detected
 Disable ALL VFX
-(No Battle Info)
+
+===No Battle Info===
 
 [Scene 47 (Defeat)]
-(Cinematic Info)
+
+===Cinematic Info===
 Change Position/Rotation for Bardock
 > Position (XYZ): -20.0 0.0 50.0 
 > Rotation (XYZ): 0.0 158.2 0.0 
@@ -1488,18 +1923,20 @@ Disable Aura Charge for Frieza - 1st Form
 > Transition Time: 8.0 
 > Position (XYZ): 17.176 -9.034 -43.447 
 > Rotation (XYZ): 24.377 156.47 0.0 
-Play Animation 388 for Bardock
-Play Animation 386 for Frieza - 1st Form
+Play Animation 388_LOSE.canm for Bardock
+Play Animation 386_WIN_IN.canm for Frieza - 1st Form
 > Wait property detected
-Play Animation 387 for Frieza - 1st Form
+Play Animation 387_WIN_LOOP.canm for Frieza - 1st Form
 > Loop property detected
 Play Voice Line 140 for Frieza - 1st Form
 > Wait property detected
 Disable ALL VFX
-(No Battle Info)
+
+===No Battle Info===
 
 [Scene 48 (Defeat)]
-(Cinematic Info)
+
+===Cinematic Info===
 Change Position/Rotation for Vegeta (Scouter)
 > Position (XYZ): -12.6 0.0 31.4 
 > Rotation (XYZ): 0.0 158.2 0.0 
@@ -1515,20 +1952,23 @@ Disable Aura Charge for Zarbon
 > Transition Time: 7.0 
 > Position (XYZ): 5.937 -11.591 -5.807 
 > Rotation (XYZ): -9.234 163.254 0.0 
-Play Animation 388 for Vegeta (Scouter)
-Play Animation 386 for Zarbon
+Play Animation 388_LOSE.canm for Vegeta (Scouter)
+Play Animation 386_WIN_IN.canm for Zarbon
 > Wait property detected
-Play Animation 387 for Zarbon
+Play Animation 387_WIN_LOOP.canm for Zarbon
 > Loop property detected
 Play Voice Line 56 for Zarbon
 > Wait property detected
 Disable ALL VFX
-(No Battle Info)
+
+===No Battle Info===
 
 [Scene 4 - UNUSED]
-(Cinematic Info)
+
+===Cinematic Info===
 Disable ALL VFX
-(Battle Info)
+
+===Battle Info===
 Condition: Immediate
 > GSAC ID: 5
 [Changes to Player 1 detected.]
@@ -1537,15 +1977,43 @@ Event:     Switch with Teammate #3
 Character: Fasha
 
 [Scene 15 - UNUSED]
-(Cinematic Info)
+
+===Cinematic Info===
 Disable ALL VFX
-(Battle Info)
+
+===Battle Info===
 Condition: Wait 25 seconds
 > GSAC ID: 16
 Condition: Win via K.O. (Opponent)
 > GSAC ID: 45
 Condition: Win via K.O.
 > GSAC ID: 31
+Condition: Immediate
+> Voice Line ID: 129
+Condition: Immediate
+> Voice Line ID: 130
+Condition: Immediate
+> Voice Line ID: 132
+Condition: Immediate
+> Voice Line ID: 133
+Condition: Go in MAX POWER Mode (Opponent)
+> Voice Line ID: 134
+Condition: UNKNOWN(ID: 53) (Opponent)
+> Voice Line ID: 135
+Condition: Perform Dash Smash (Opponent)
+> Voice Line ID: 135
+Condition: Perform Dragon Homing (Opponent)
+> Voice Line ID: 131
+Condition: Hit with 1st Blast 2 (Opponent)
+> Voice Line ID: 136
+Condition: Go in MAX POWER Mode
+> Voice Line ID: 30
+Condition: Perform Vanishing Attack (Opponent)
+> Voice Line ID: 131
+Condition: Fall into ground/water [AUTO]
+> Voice Line ID: 31
+Condition: Hit with 2nd Blast 2 (Opponent)
+> Voice Line ID: 136
 [Changes to Player 1 detected.]
 > Add 100% more Health
 Event:     Battle Finish

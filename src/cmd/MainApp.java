@@ -1,5 +1,5 @@
 package cmd;
-//Swag Studio v1.4 by ViveTheModder
+//Swag Studio v1.5 by ViveTheModder
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -7,15 +7,23 @@ import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.Scanner;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 
 public class MainApp 
 {
 	private static int sharedPos=0;
 	private static int[][] teams = new int[10][13];
 	static final int INFO = JOptionPane.INFORMATION_MESSAGE;
+	static JProgressBar bar;
+	static JFrame frame;
+	static JLabel label;
 	static final String CSV_PATH = "./csv/";
 	static final String GSC_PATH = "./gsc/";
+	static final String HTML_TEXT = "<html><div style='text-align: center;'>";
 	static final String OUT_PATH = "./out/";
 	static final String WINDOW_TITLE = "Swag Studio";
 	
@@ -166,7 +174,7 @@ public class MainApp
 	public static String getStringFromCondOrEventID(RandomAccessFile csv, int ID, boolean isCond) throws IOException
 	{
 		byte[] bytes = ByteBuffer.allocate(4).putInt(ID).array();
-		String output = "";
+		String output="", temp;
 		
 		if (bytes[2] == -128) //check if ID belongs to opponent condition/event
 		{
@@ -179,7 +187,10 @@ public class MainApp
 			if (isCond == true)
 				if (ID>=22 && ID<29) output += " [AUTO]";
 		}
-		output = getStringFromAnyID(csv, ID) + output; //properly initialize output
+		
+		temp = getStringFromAnyID(csv, ID);
+		if (temp.equals("UNKNOWN")) temp += "(ID: " + ID + ")";
+		output = temp + output; //properly initialize output
 		
 		if (isCond == true) //check for condition ID
 			if (ID == 34) output += " [AUTO]";
@@ -306,6 +317,7 @@ public class MainApp
 	}
 	public static String showSceneInfo(RandomAccessFile gsc, RandomAccessFile bgmCsv, RandomAccessFile charCsv, RandomAccessFile itemsCsv, short gsdtStart, int option) throws IOException
 	{
+		RandomAccessFile anmCsv = new RandomAccessFile(CSV_PATH+"anm.csv","r");
 		RandomAccessFile condCsv = new RandomAccessFile(CSV_PATH+"conditions.csv","r");
 		RandomAccessFile eventCsv = new RandomAccessFile(CSV_PATH+"events.csv","r");
 		int bgmID=0, charIndex, curr=0, currID=10000, gsacType=0, inputInt, initGSACpos=sharedPos-1;
@@ -336,8 +348,8 @@ public class MainApp
 			if (curr == 0x01000700)
 			{
 				gsc.seek(sharedPos+4);
-				if (gsc.readInt() != 0x01000D00) output += "(Battle Info)\n";
-				else output += "(No Battle Info)\n";
+				if (gsc.readInt() != 0x01000D00) output += "\n===Battle Info===\n";
+				else output += "\n===No Battle Info===\n";
 			}
 			if (curr == 0x01010900)
 			{
@@ -448,7 +460,7 @@ public class MainApp
 					inputFloat = getFloatFromOffset(gsc,offset,gsdtStart);
 					output += "Wait " + inputFloat + " seconds\n";
 				}
-				if (curr == 0x01000300) output += "(Cinematic Info)\n";
+				if (curr == 0x01000300) output += "\n===Cinematic Info===\n";
 				if (curr == 0x01000600) output += "Disable ALL VFX\n";
 				
 				//start of GSC functions 801-810
@@ -618,7 +630,7 @@ public class MainApp
 					offset = getLittleEndianShort(gsc.readShort());
 					inputInt = getIntFromOffset(gsc,offset,gsdtStart);
 					
-					output += "Play Animation " + inputInt + " for " + getStringFromAnyID(charCsv, teams[charIndex][0]) + "\n";
+					output += "Play Animation " + inputInt + "_" + getStringFromAnyID(anmCsv, inputInt) + ".canm for " + getStringFromAnyID(charCsv, teams[charIndex][0]) + "\n";
 				}
 				
 				//start of GSC functions 1001-1003
@@ -741,16 +753,17 @@ public class MainApp
 			name.startsWith("GSC-B-") && (name.toLowerCase().endsWith(".gsc") || name.toLowerCase().endsWith(".unk"))
 		)); //that's right, the tool detects UNK files too lmao
 		
-		int gscIndex=0, msgType=INFO, option=1; short gsdtStart;
+		int gscIndex=0, gscCnt=gscPaths.length, msgType=INFO, option=1, percentage=0; short gsdtStart;
 		String output1, output2, timeString, msg="Would you like to include cinematic info for each log?";
 		double start, finish, time1=0, time2=0, interval, total=0;
+		boolean isCmdUsed=false;
 		
-		RandomAccessFile[] gscFiles = new RandomAccessFile[gscPaths.length];
+		RandomAccessFile[] gscFiles = new RandomAccessFile[gscCnt];
 		RandomAccessFile bgmCsv = new RandomAccessFile(CSV_PATH+"bgm.csv","r");
 		RandomAccessFile charCsv = new RandomAccessFile(CSV_PATH+"characters.csv","r");
 		RandomAccessFile itemsCsv = new RandomAccessFile(CSV_PATH+"items.csv","r");
 
-		if (gscPaths.length != 0)
+		if (gscCnt != 0)
 		{
 			for (File file: gscPaths) //initialize the RAF array with the gsc file paths
 			{
@@ -758,14 +771,36 @@ public class MainApp
 				gscIndex++;
 			}
 			//check for command line arguments
-			if (args.length == 0) JOptionPane.showConfirmDialog(null, msg, WINDOW_TITLE, 0);
+			if (args.length == 0) option=JOptionPane.showConfirmDialog(null, msg, WINDOW_TITLE, 0);
 			else
-			{
-				if (args[0]==("-c")) option=0; //skip confirm dialog if argument is given
-				else JOptionPane.showConfirmDialog(null, msg, WINDOW_TITLE, 0);
+			{	
+				isCmdUsed=true;
+				if (args[0].equals("-c")) option=0; //skip confirm dialog if argument is given
+				else option=JOptionPane.showConfirmDialog(null, msg, WINDOW_TITLE, 0);
 			}
 				
 			msg = "Time required for each GSC:\n";
+			//apply GUI components if no CLI is used
+			if (!isCmdUsed)
+			{
+				frame = new JFrame(WINDOW_TITLE);
+				JPanel panel = new JPanel();
+				label = new JLabel();
+				
+				bar = new JProgressBar();
+				bar.setValue(0);
+				bar.setStringPainted(true); //display percentage on progress bar
+				
+				panel.add(bar);
+				panel.add(label);
+				frame.add(panel);
+				
+				frame.setSize(256, 128);
+				frame.setLocationRelativeTo(null); //set location to center of the screen
+				frame.setResizable(false); //disable ability to resize window
+				frame.setDefaultCloseOperation(0); //disable close button functionality
+				frame.setVisible(true);
+			}
 			
 			for (int i=0; i<gscFiles.length; i++)
 			{
@@ -779,20 +814,30 @@ public class MainApp
 				if (dotIndex>=0) fileExt = fileName.substring(dotIndex);
 				
 				System.out.println("> Reading " + fileName + "...");
+				if (!isCmdUsed) label.setText(HTML_TEXT + fileName + "<br>Reading GSC file...");
 				if (isFaultyGSC(gsc))
 				{
 					System.out.println("> Skipping " + fileName + " (faulty GSC)...");
+					if (!isCmdUsed) label.setText(HTML_TEXT + fileName + "<br>Skipping faulty GSC file...");
 					continue;
 				}
 				start = System.currentTimeMillis();
 				output1 = showCommonInfo(gsc,bgmCsv,charCsv,itemsCsv,gsdtStart);
+				if (!isCmdUsed) label.setText(HTML_TEXT + fileName + "<br>Writing Common Information...");
 				finish = System.currentTimeMillis();
 				time1 = (finish-start)/1000; total += time1;
 				
+				percentage += 100/(2*gscCnt);
+				if (!isCmdUsed) bar.setValue(percentage);
+				
 				start = System.currentTimeMillis();
 				output2 = showSceneInfo(gsc,bgmCsv,charCsv,itemsCsv,gsdtStart,option);
+				if (!isCmdUsed) label.setText(HTML_TEXT + fileName + "<br>Writing Scene Information...");
 				finish = System.currentTimeMillis();
-				time2 = (finish-start)/1000; total += time1;
+				time2 = (finish-start)/1000; total += time2;
+				
+				percentage += 100/(2*gscCnt);
+				if (!isCmdUsed) bar.setValue(percentage);
 
 				System.out.println("Time required for Battle Settings:   " + time1 + " seconds."
 									+ "\nTime required for Scene Information: "+ time2 + " seconds.");
@@ -811,7 +856,7 @@ public class MainApp
 			System.out.printf("Total time elapsed: %.0f minute(s) & %.3f seconds.", total/60, total%60);
 
 			timeString = String.format("%.0f", total/60);
-			msg += "\nTotal time elapsed:\n" + timeString + " minutes & ";
+			msg += "\nTotal time elapsed:\n" + timeString + " minute(s) & ";
 			timeString = String.format("%.3f", total%60);
 			msg += timeString + " seconds";
 		}
@@ -819,6 +864,11 @@ public class MainApp
 		{ 
 			msg="No GSC files found!"; msgType = JOptionPane.ERROR_MESSAGE;
 		}
-		JOptionPane.showMessageDialog(null, msg, WINDOW_TITLE, msgType);
+		if (!isCmdUsed)
+		{
+			frame.setVisible(false);
+			JOptionPane.showMessageDialog(null, msg, WINDOW_TITLE, msgType);
+		}
+		System.exit(0); //successful termination
 	}
 }
