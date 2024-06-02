@@ -25,3 +25,6 @@ And just for fun, [here](https://github.com/ViveTheModder/swag-studio/blob/main/
 
 In case the text file was hard to follow, here is a visualization of the scenario's structure.
 ![preview2](https://github.com/ViveTheModder/swag-studio/blob/main/img/visualization.png)
+
+# Video Demonstration
+[![Swag Studio](https://github.com/ViveTheModder/swag-studio/assets/93151014/802ca9e8-023d-4f20-9f7c-4e22083dcc5d)](https://www.youtube.com/watch?v=8GD3YA_pDfg "Swag Studio")
