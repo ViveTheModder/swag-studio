@@ -1,5 +1,5 @@
 # swag-studio
-Swag Studio is a Budokai Tenkaichi 3 tool made for GSC files (Dragon History scenarios) to display plenty of information about them.
+Swag Studio is a Budokai Tenkaichi 3 tool made for GSC files (Dragon History scenarios), both PS2 and Wii ones, to display plenty of information about them.
 It can display the following:
 * what map and background music the scenario uses, and if it ever changes during certain scenes;
 * what rewards the player gets after completing a scenario;
@@ -16,7 +16,7 @@ Although, the user can also choose to display cinematic information, which refer
 * enabling or disabling visual effects like the Aura Charge, Ki Charge, Camera Shake and MAX Power Mode explosion;
 * enabling or disabling fades (fade-in / fade-out).
 
-To ensure the program works, it comes with a folder containing vanilla copies of every GSC (from GSC-B-00.gsc to GSC-B-47.gsc).
+To ensure the program works, the repo includes a folder containing vanilla copies of every GSC (from GSC-B-00.gsc to GSC-B-47.gsc).
 
 ## Usage/Preview
 ![preview1](https://github.com/ViveTheModder/swag-studio/blob/main/img/demo.png)

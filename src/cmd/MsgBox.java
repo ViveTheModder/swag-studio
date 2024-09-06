@@ -1,5 +1,6 @@
 package cmd;
 //Swag Studio Message Box class by ViveTheModder
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -35,6 +36,7 @@ public class MsgBox
 		if (MainApp.option==0) maxProgTotal=maxProgAdv*MainApp.gscCnt;
 		else maxProgTotal=maxProgSim*MainApp.gscCnt;
 		
+		ImageIcon icon = new ImageIcon("icon.png"); 
 		frame = new JFrame(WINDOW_TITLE);
 		JPanel panel = new JPanel();
 		label = new JLabel();
@@ -47,6 +49,7 @@ public class MsgBox
 		panel.add(label);
 		frame.add(panel);
 		
+		frame.setIconImage(icon.getImage());
 		frame.setSize(256, 128);
 		frame.setLocationRelativeTo(null); //set location to center of the screen
 		frame.setResizable(false); //disable ability to resize window
