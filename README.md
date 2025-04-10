@@ -1,3 +1,7 @@
+# UPDATE
+As of the **10th of April, 2025**, this repository has been archived. What previously took me a year has now been remade in two days.
+
+Make sure to check out its successor, [GSC Reader](https://github.com/ViveTheModder/gsc-reader)!
 # swag-studio
 Swag Studio is a Budokai Tenkaichi 3 tool made for GSC files (Dragon History scenarios), both PS2 and Wii ones, to display plenty of information about them.
 It can display the following:
